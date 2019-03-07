@@ -11,10 +11,22 @@ print('----Loading Dataset----')
 ds_train_pd_df, ds_test_pd_df, target_col_name, target_col_idx, feature_col_names = susy_csv_to_df(
         args.path_to_csv, args.chunksize, args.num_train_chunks, args.num_test_chunks)
 col_names = [target_col_name]+feature_col_names
+import pandas as pd
+ds_merged_pd_df = pd.concat([ds_train_pd_df, ds_test_pd_df])
+train_frac = 1. * args.num_train_chunks/(args.num_test_chunks+args.num_train_chunks)
+
 
 print('----Creating Spark Context----')
+from pyspark import SparkContext
+from pyspark.sql import SQLContext
+sc = SparkContext("local", "SparkLogisticRegression")
+sc.setLogLevel("ERROR")
 sqlCtx = SQLContext(sc)
+
+
+print('----Creating Spark DataFrame----')
 ds_spark_df = sqlCtx.createDataFrame(ds_train_pd_df, schema=col_names)
+
 
 print('----Assembling Data----')
 from pyspark.ml.feature import VectorAssembler
@@ -22,10 +34,9 @@ vecassembler = VectorAssembler(
         inputCols=ds_spark_df.columns[:target_col_idx]+ds_spark_df.columns[target_col_idx+1:],
         outputCol="features")
 features_vec = vecassembler.transform(ds_spark_df)
-
 features_vec = features_vec.withColumnRenamed(target_col_name, "label")
 features_data = features_vec.select("label", "features")
-feat_train, feat_test = features_data.randomSplit([0.8, 0.2])
+feat_train, feat_test = features_data.randomSplit([train_frac, 1-train_frac])
 
 print('----Training Model----')
 from pyspark.ml.classification import LogisticRegression

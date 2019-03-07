@@ -11,8 +11,12 @@ ds_train_pd_df, ds_test_pd_df, target_col_name, target_col_idx, feature_col_name
         args.path_to_csv, args.chunksize, args.num_train_chunks, args.num_test_chunks)
 col_names = [target_col_name]+feature_col_names
 
+print("----Creating Spark Context----")
+from pyspark import SparkContext
+sc = SparkContext("local", "SparklingWaterKmeans")
+
 print('----Creating H2O Context----')
-hc = H2OContext.getOrCreate(spark)
+hc = H2OContext.getOrCreate(sc)
 
 print('----Creating H2O Frame----')
 import h2o
