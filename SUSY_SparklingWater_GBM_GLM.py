@@ -15,6 +15,7 @@ col_names = [target_col_name]+feature_col_names
 print("----Creating Spark Context----")
 from pyspark import SparkContext
 sc = SparkContext("local", "SparklingWaterGBMGLM")
+sc.setLogLevel("ERROR")
 
 print('----Creating H2O Context----')
 hc = H2OContext.getOrCreate(sc)
