@@ -14,6 +14,6 @@ $SPARKLING_HOME/bin/run-python-script.sh  \<PY File\> --path_to_csv \<Path to Da
 
 ## How to run the Jupyter Notebook Files
 
-PySpark: PYSPARK_DRIVER_PYTHON="ipython" PYSPARK_DRIVER_PYTHON_OPTS="notebook"  pyspark &
+PySpark: PYSPARK_DRIVER_PYTHON="ipython" PYSPARK_DRIVER_PYTHON_OPTS="notebook"  pyspark &  
 PySparkling Water: PYSPARK_DRIVER_PYTHON="ipython" PYSPARK_DRIVER_PYTHON_OPTS="notebook"  $SPARKLING_HOME/bin/pysparkling &
 
