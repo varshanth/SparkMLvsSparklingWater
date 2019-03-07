@@ -1,0 +1,5 @@
+export SPARK_HOME="/home/varsrao/spark-2.4.0-bin-hadoop2.7/"
+export MASTER="local[*]"
+cd ~/sparkling-water
+export H2O_PYTHON_WHEEL=$(pwd)/private/h2o.whl
+export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64"
