@@ -1,0 +1,210 @@
+03-09 12:36:08.635 192.168.2.254:54321   19799  #r thread INFO: Sparkling Water version: 2.4.99999-SNAPSHOT
+03-09 12:36:08.644 192.168.2.254:54321   19799  #r thread INFO: Spark version: 2.4.0
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: Integrated H2O version: 3.22.1.4
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: The following Spark configuration is used: 
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.master,local)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.app.name,PySpark_susy_pca)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.app.id,local-1552152966306)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.driver.memory,2G)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.driver.port,44183)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.ext.h2o.cloud.name,sparkling-water-varsrao_local-1552152966306)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.submit.pyFiles,/home/varsrao/sparkling-water/py/build/dist/h2o_pysparkling_2.4-2.4.99999-SNAPSHOT.zip)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.executor.id,driver)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.files,file:///home/varsrao/sparkling-water/py/build/dist/h2o_pysparkling_2.4-2.4.99999-SNAPSHOT.zip)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.ext.h2o.client.ip,192.168.2.254)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.executor.extraClassPath,/home/varsrao/sparkling-water/jars/httpclient-4.5.2.jar)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.driver.host,192.168.2.254)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.locality.wait,30000)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.rdd.compress,True)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.serializer.objectStreamReset,100)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.ext.h2o.client.log.dir,/home/varsrao/sparkling-water/SparkMLvsSparklingWater/h2ologs/local-1552152966306)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.submit.deployMode,client)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.driver.extraClassPath,/home/varsrao/sparkling-water/jars/httpclient-4.5.2.jar)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO:     (spark.driver.extraJavaOptions,)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: 
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: Found XGBoost backend with library: xgboost4j_gpu
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: XGBoost supported backends: [WITH_GPU, WITH_OMP]
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: ----- H2O started  -----
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: Build git branch: rel-xu
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: Build git hash: a904e87eaeb593438752e58b79c68c079e04a7ef
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: Build git describe: jenkins-3.22.1.3-64-ga904e87
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: Build project version: 3.22.1.4
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: Build age: 21 days, 13 hours and 38 minutes
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: Built by: 'jenkins'
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: Built on: '2019-02-15 22:57:20'
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: StackTraceCollector Build git branch: (unknown)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: StackTraceCollector Build git hash: (unknown)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: StackTraceCollector Build git describe: (unknown)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: StackTraceCollector Build project version: (unknown)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: StackTraceCollector Built by: (unknown)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: StackTraceCollector Built on: (unknown)
+03-09 12:36:08.645 192.168.2.254:54321   19799  #r thread INFO: Watchdog Build git branch: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Watchdog Build git hash: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Watchdog Build git describe: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Watchdog Build project version: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Watchdog Built by: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Watchdog Built on: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: XGBoost Build git branch: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: XGBoost Build git hash: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: XGBoost Build git describe: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: XGBoost Build project version: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: XGBoost Built by: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: XGBoost Built on: (unknown)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Processed H2O arguments: [-name, sparkling-water-varsrao_local-1552152966306, -port_offset, 1, -quiet, -log_level, INFO, -log_dir, /home/varsrao/sparkling-water/SparkMLvsSparklingWater/h2ologs/local-1552152966306, -baseport, 54321, -ip, 192.168.2.254, -ip, 192.168.2.254, -log_dir, /home/varsrao/sparkling-water/SparkMLvsSparklingWater/h2ologs/local-1552152966306]
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Java availableProcessors: 4
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Java heap totalMemory: 221.5 MB
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Java heap maxMemory: 1.78 GB
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Java version: Java 1.8.0_191 (from Oracle Corporation)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: JVM launch parameters: [-Xmx2G]
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: OS version: Linux 4.15.0-45-generic (amd64)
+03-09 12:36:08.646 192.168.2.254:54321   19799  #r thread INFO: Machine physical memory: 7.67 GB
+03-09 12:36:08.647 192.168.2.254:54321   19799  #r thread INFO: X-h2o-cluster-id: 1552152967202
+03-09 12:36:08.647 192.168.2.254:54321   19799  #r thread INFO: User name: 'varsrao'
+03-09 12:36:08.647 192.168.2.254:54321   19799  #r thread INFO: IPv6 stack selected: false
+03-09 12:36:08.647 192.168.2.254:54321   19799  #r thread INFO: Possible IP Address: wlp3s0 (wlp3s0), fe80:0:0:0:4dc1:ed03:faa9:3faf%wlp3s0
+03-09 12:36:08.647 192.168.2.254:54321   19799  #r thread INFO: Possible IP Address: wlp3s0 (wlp3s0), 192.168.2.254
+03-09 12:36:08.647 192.168.2.254:54321   19799  #r thread INFO: Possible IP Address: lo (lo), 0:0:0:0:0:0:0:1%lo
+03-09 12:36:08.647 192.168.2.254:54321   19799  #r thread INFO: Possible IP Address: lo (lo), 127.0.0.1
+03-09 12:36:08.647 192.168.2.254:54321   19799  #r thread INFO: H2O node running in unencrypted mode.
+03-09 12:36:08.649 192.168.2.254:54321   19799  #r thread INFO: Internal communication uses port: 54322
+03-09 12:36:08.649 192.168.2.254:54321   19799  #r thread INFO: Listening for HTTP and REST traffic on http://192.168.2.254:54321/
+03-09 12:36:08.678 192.168.2.254:54321   19799  #r thread INFO: H2O cloud name: 'sparkling-water-varsrao_local-1552152966306' on /192.168.2.254:54321, discovery address /227.128.251.176:58240
+03-09 12:36:08.678 192.168.2.254:54321   19799  #r thread INFO: If you have trouble connecting, try SSH tunneling from your local machine (e.g., via port 55555):
+03-09 12:36:08.678 192.168.2.254:54321   19799  #r thread INFO:   1. Open a terminal and run 'ssh -L 55555:localhost:54321 varsrao@192.168.2.254'
+03-09 12:36:08.678 192.168.2.254:54321   19799  #r thread INFO:   2. Point your browser to http://localhost:55555
+03-09 12:36:08.876 192.168.2.254:54321   19799  #r thread INFO: Log dir: '/home/varsrao/sparkling-water/SparkMLvsSparklingWater/h2ologs/local-1552152966306'
+03-09 12:36:08.877 192.168.2.254:54321   19799  #r thread INFO: Cur dir: '/home/varsrao/sparkling-water/SparkMLvsSparklingWater'
+03-09 12:36:08.885 192.168.2.254:54321   19799  #r thread INFO: Distributed HTTP import not available (import from HTTP/HTTPS will be eager)
+03-09 12:36:08.888 192.168.2.254:54321   19799  #r thread INFO: HDFS subsystem successfully initialized
+03-09 12:36:08.895 192.168.2.254:54321   19799  #r thread INFO: S3 subsystem successfully initialized
+03-09 12:36:08.928 192.168.2.254:54321   19799  #r thread INFO: GCS subsystem successfully initialized
+03-09 12:36:08.929 192.168.2.254:54321   19799  #r thread INFO: Flow dir: '/home/varsrao/h2oflows'
+03-09 12:36:08.969 192.168.2.254:54321   19799  #r thread INFO: Cloud of size 1 formed [192.168.2.254/192.168.2.254:54321]
+03-09 12:36:08.998 192.168.2.254:54321   19799  #r thread INFO: Registered parsers: [GUESS, ARFF, XLS, SVMLight, AVRO, ORC, PARQUET, CSV]
+03-09 12:36:08.999 192.168.2.254:54321   19799  #r thread INFO: StackTraceCollector extension initialized
+03-09 12:36:08.999 192.168.2.254:54321   19799  #r thread INFO: Watchdog extension initialized
+03-09 12:36:08.999 192.168.2.254:54321   19799  #r thread INFO: XGBoost extension initialized
+03-09 12:36:08.999 192.168.2.254:54321   19799  #r thread INFO: Registered 3 core extensions in: 166ms
+03-09 12:36:08.999 192.168.2.254:54321   19799  #r thread INFO: Registered H2O core extensions: [StackTraceCollector, Watchdog, XGBoost]
+03-09 12:36:09.471 192.168.2.254:54321   19799  #r thread INFO: Registered: 170 REST APIs in: 472ms
+03-09 12:36:09.471 192.168.2.254:54321   19799  #r thread INFO: Registered REST API extensions: [XGBoost, Algos, Amazon S3, AutoML, Core V3, Core V4]
+03-09 12:36:09.617 192.168.2.254:54321   19799  #r thread INFO: Registered: 258 schemas in 146ms
+03-09 12:36:09.617 192.168.2.254:54321   19799  #r thread INFO: H2O started in 1275ms
+03-09 12:36:09.617 192.168.2.254:54321   19799  #r thread INFO: 
+03-09 12:36:09.617 192.168.2.254:54321   19799  #r thread INFO: Open H2O Flow in your web browser: http://192.168.2.254:54321
+03-09 12:36:09.617 192.168.2.254:54321   19799  #r thread INFO: 
+03-09 12:36:17.781 192.168.2.254:54321   19799  #09918-73 INFO: GET /3/Capabilities/API, parms: {}
+03-09 12:36:17.788 192.168.2.254:54321   19799  #09918-73 INFO: Locking cloud to new members, because water.api.schemas3.CapabilitiesV3
+03-09 12:36:40.487 192.168.2.254:54321   19799  #09918-74 INFO: Reading byte InputStream into Frame:
+03-09 12:36:40.493 192.168.2.254:54321   19799  #09918-74 INFO:     frameKey:    upload_bf96427e09002083d7b70bceae3646b9
+03-09 12:36:41.821 192.168.2.254:54321   19799  #09918-74 INFO:     totalChunks: 83
+03-09 12:36:41.821 192.168.2.254:54321   19799  #09918-74 INFO:     totalBytes:  346368860
+03-09 12:36:41.842 192.168.2.254:54321   19799  #09918-74 INFO:     Success.
+03-09 12:36:41.867 192.168.2.254:54321   19799  #09918-75 INFO: POST /3/ParseSetup, parms: {source_frames=["upload_bf96427e09002083d7b70bceae3646b9"], check_header=1, separator=44}
+03-09 12:36:42.329 192.168.2.254:54321   19799  #09918-76 INFO: POST /3/Parse, parms: {number_columns=19, source_frames=["upload_bf96427e09002083d7b70bceae3646b9"], column_types=["Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric"], single_quotes=False, parse_type=CSV, destination_frame=Key_Frame__upload_bf96427e09002083d7b70bceae3646b9.hex, column_names=["target","0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"], delete_on_done=True, check_header=1, separator=44, blocking=False, chunk_size=4194304}
+03-09 12:36:42.334 192.168.2.254:54321   19799  #09918-76 INFO: Total file size: 330.3 MB
+03-09 12:36:42.334 192.168.2.254:54321   19799  #09918-76 INFO: Parse chunk size 4194304
+03-09 12:36:45.922 192.168.2.254:54321   19799  FJ-1-7    INFO: Parse result for Key_Frame__upload_bf96427e09002083d7b70bceae3646b9.hex (1000000 rows, 19 columns):
+03-09 12:36:46.158 192.168.2.254:54321   19799  FJ-1-7    INFO:   ColV2    type          min          max         mean        sigma         NAs constant cardinality
+03-09 12:36:46.159 192.168.2.254:54321   19799  FJ-1-7    INFO:  target: numeric      0.00000      1.00000     0.457925     0.498227                            
+03-09 12:36:46.159 192.168.2.254:54321   19799  FJ-1-7    INFO:       0: numeric     0.255507      19.9496      1.00040     0.686732                            
+03-09 12:36:46.160 192.168.2.254:54321   19799  FJ-1-7    INFO:       1: numeric     -2.10292      2.10160 -0.000491502      1.00318                            
+03-09 12:36:46.160 192.168.2.254:54321   19799  FJ-1-7    INFO:       2: numeric     -1.73479      1.73484  -0.00182623      1.00168                            
+03-09 12:36:46.160 192.168.2.254:54321   19799  FJ-1-7    INFO:       3: numeric     0.428588      26.1107     0.999187     0.654622                            
+03-09 12:36:46.160 192.168.2.254:54321   19799  FJ-1-7    INFO:       4: numeric     -2.05931      2.05972  0.000788758      1.00271                            
+03-09 12:36:46.160 192.168.2.254:54321   19799  FJ-1-7    INFO:       5: numeric     -1.73420      1.73469  0.000421527      1.00167                            
+03-09 12:36:46.161 192.168.2.254:54321   19799  FJ-1-7    INFO:       6: numeric  0.000708877      19.2067      1.00092     0.874766                            
+03-09 12:36:46.161 192.168.2.254:54321   19799  FJ-1-7    INFO:       7: numeric     -1.72711      1.74069 -0.000367109      1.00146                            
+03-09 12:36:46.161 192.168.2.254:54321   19799  FJ-1-7    INFO:       8: numeric  9.23894e-07      19.2424      1.00158     0.889947                            
+03-09 12:36:46.161 192.168.2.254:54321   19799  FJ-1-7    INFO:       9: numeric     -16.7186      19.5922   0.00112867      1.00279                            
+03-09 12:36:46.162 192.168.2.254:54321   19799  FJ-1-7    INFO:      10: numeric     0.267307      18.1972      1.00003     0.628542                            
+03-09 12:36:46.162 192.168.2.254:54321   19799  FJ-1-7    INFO:      11: numeric   0.00242740      16.1668      1.00020     0.583377                            
+03-09 12:36:46.162 192.168.2.254:54321   19799  FJ-1-7    INFO:      12: numeric   0.00621277      6.73121      1.00031     0.470702                            
+03-09 12:36:46.162 192.168.2.254:54321   19799  FJ-1-7    INFO:      13: numeric      0.00000      19.3073      1.00051     0.859066                            
+03-09 12:36:46.162 192.168.2.254:54321   19799  FJ-1-7    INFO:      14: numeric    0.0273413      18.2280     0.999704     0.620413                            
+03-09 12:36:46.163 192.168.2.254:54321   19799  FJ-1-7    INFO:      15: numeric   0.00445286      14.6306      1.00023     0.623480                            
+03-09 12:36:46.163 192.168.2.254:54321   19799  FJ-1-7    INFO:      16: numeric  8.22401e-06      1.59166     0.999281     0.436111                            
+03-09 12:36:46.163 192.168.2.254:54321   19799  FJ-1-7    INFO:      17: numeric  2.38867e-07      1.00000     0.225176     0.197049                            
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO: Chunk compression summary:
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO:   Chunk Type    Chunk Name       Count  Count Percentage        Size  Size Percentage
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO:          CBS        Binary          83           5.263 %    127.8 KB          0.091 %
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO:          C8D  64-bit Reals        1494          94.737 %    137.4 MB         99.909 %
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO: Frame distribution summary:
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO:                            Size  Number of Rows  Number of Chunks per Column  Number of Chunks
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO: 192.168.2.254:54321    137.6 MB         1000000                           83              1577
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO:                mean    137.6 MB  1000000.000000                    83.000000       1577.000000
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO:                 min    137.6 MB  1000000.000000                    83.000000       1577.000000
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO:                 max    137.6 MB  1000000.000000                    83.000000       1577.000000
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO:              stddev        0  B        0.000000                     0.000000          0.000000
+03-09 12:36:46.180 192.168.2.254:54321   19799  FJ-1-7    INFO:               total    137.6 MB         1000000                           83              1577
+03-09 12:36:46.335 192.168.2.254:54321   19799  #09918-76 INFO: GET /3/Frames/Key_Frame__upload_bf96427e09002083d7b70bceae3646b9.hex, parms: {column_offset=0, full_column_count=-1, row_count=10, row_offset=0, column_count=-1}
+03-09 12:37:07.830 192.168.2.254:54321   19799  #09918-77 INFO: Reading byte InputStream into Frame:
+03-09 12:37:07.830 192.168.2.254:54321   19799  #09918-77 INFO:     frameKey:    upload_9c85017ba1c70709d60df7a55944fe5
+03-09 12:37:08.824 192.168.2.254:54321   19799  #09918-77 INFO:     totalChunks: 83
+03-09 12:37:08.824 192.168.2.254:54321   19799  #09918-77 INFO:     totalBytes:  346357517
+03-09 12:37:08.824 192.168.2.254:54321   19799  #09918-77 INFO:     Success.
+03-09 12:37:08.847 192.168.2.254:54321   19799  #09918-78 INFO: POST /3/ParseSetup, parms: {source_frames=["upload_9c85017ba1c70709d60df7a55944fe5"], check_header=1, separator=44}
+03-09 12:37:09.101 192.168.2.254:54321   19799  #09918-71 INFO: POST /3/Parse, parms: {number_columns=19, source_frames=["upload_9c85017ba1c70709d60df7a55944fe5"], column_types=["Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric","Numeric"], single_quotes=False, parse_type=CSV, destination_frame=Key_Frame__upload_9c85017ba1c70709d60df7a55944fe5.hex, column_names=["target","0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"], delete_on_done=True, check_header=1, separator=44, blocking=False, chunk_size=4194304}
+03-09 12:37:09.102 192.168.2.254:54321   19799  #09918-71 INFO: Total file size: 330.3 MB
+03-09 12:37:09.102 192.168.2.254:54321   19799  #09918-71 INFO: Parse chunk size 4194304
+03-09 12:37:13.747 192.168.2.254:54321   19799  FJ-1-5    INFO: Parse result for Key_Frame__upload_9c85017ba1c70709d60df7a55944fe5.hex (1000000 rows, 19 columns):
+03-09 12:37:13.843 192.168.2.254:54321   19799  FJ-1-5    INFO:   ColV2    type          min          max         mean        sigma         NAs constant cardinality
+03-09 12:37:13.843 192.168.2.254:54321   19799  FJ-1-5    INFO:  target: numeric      0.00000      1.00000     0.457287     0.498173                            
+03-09 12:37:13.844 192.168.2.254:54321   19799  FJ-1-5    INFO:       0: numeric     0.255611      20.5534      1.00054     0.689282                            
+03-09 12:37:13.844 192.168.2.254:54321   19799  FJ-1-5    INFO:       1: numeric     -2.10293      2.10156 -0.000515136      1.00273                            
+03-09 12:37:13.844 192.168.2.254:54321   19799  FJ-1-5    INFO:       2: numeric     -1.73479      1.73484  0.000487934      1.00205                            
+03-09 12:37:13.844 192.168.2.254:54321   19799  FJ-1-5    INFO:       3: numeric     0.428586      33.0356     0.999647     0.655231                            
+03-09 12:37:13.844 192.168.2.254:54321   19799  FJ-1-5    INFO:       4: numeric     -2.05929      2.05971 -0.000898714      1.00305                            
+03-09 12:37:13.845 192.168.2.254:54321   19799  FJ-1-5    INFO:       5: numeric     -1.73420      1.73468   0.00178538      1.00123                            
+03-09 12:37:13.845 192.168.2.254:54321   19799  FJ-1-5    INFO:       6: numeric   0.00185776      21.0010      1.00038     0.876070                            
+03-09 12:37:13.845 192.168.2.254:54321   19799  FJ-1-5    INFO:       7: numeric     -1.72711      1.74068  0.000757052      1.00182                            
+03-09 12:37:13.845 192.168.2.254:54321   19799  FJ-1-5    INFO:       8: numeric  6.99866e-07      23.3864      1.00251     0.894182                            
+03-09 12:37:13.845 192.168.2.254:54321   19799  FJ-1-5    INFO:       9: numeric     -15.3351      17.6919  0.000128392      1.00235                            
+03-09 12:37:13.845 192.168.2.254:54321   19799  FJ-1-5    INFO:      10: numeric     0.267654      21.0757      1.00032     0.629228                            
+03-09 12:37:13.846 192.168.2.254:54321   19799  FJ-1-5    INFO:      11: numeric   0.00690435      14.7374      1.00021     0.585769                            
+03-09 12:37:13.846 192.168.2.254:54321   19799  FJ-1-5    INFO:      12: numeric   0.00452808      5.26223     0.999985     0.471022                            
+03-09 12:37:13.846 192.168.2.254:54321   19799  FJ-1-5    INFO:      13: numeric      0.00000      20.6862     0.999950     0.859905                            
+03-09 12:37:13.846 192.168.2.254:54321   19799  FJ-1-5    INFO:      14: numeric    0.0557969      21.1523      1.00016     0.621052                            
+03-09 12:37:13.846 192.168.2.254:54321   19799  FJ-1-5    INFO:      15: numeric   0.00446338      15.6137      1.00011     0.624952                            
+03-09 12:37:13.846 192.168.2.254:54321   19799  FJ-1-5    INFO:      16: numeric  7.48563e-07      1.59166     0.999834     0.436007                            
+03-09 12:37:13.846 192.168.2.254:54321   19799  FJ-1-5    INFO:      17: numeric  9.18195e-07      1.00000     0.224833     0.197060                            
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO: Chunk compression summary:
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO:   Chunk Type    Chunk Name       Count  Count Percentage        Size  Size Percentage
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO:          CBS        Binary          83           5.263 %    127.8 KB          0.091 %
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO:          C8D  64-bit Reals        1494          94.737 %    137.4 MB         99.909 %
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO: Frame distribution summary:
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO:                            Size  Number of Rows  Number of Chunks per Column  Number of Chunks
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO: 192.168.2.254:54321    137.6 MB         1000000                           83              1577
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO:                mean    137.6 MB  1000000.000000                    83.000000       1577.000000
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO:                 min    137.6 MB  1000000.000000                    83.000000       1577.000000
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO:                 max    137.6 MB  1000000.000000                    83.000000       1577.000000
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO:              stddev        0  B        0.000000                     0.000000          0.000000
+03-09 12:37:13.849 192.168.2.254:54321   19799  FJ-1-5    INFO:               total    137.6 MB         1000000                           83              1577
+03-09 12:37:14.453 192.168.2.254:54321   19799  #09918-74 INFO: GET /3/Frames/Key_Frame__upload_9c85017ba1c70709d60df7a55944fe5.hex, parms: {column_offset=0, full_column_count=-1, row_count=10, row_offset=0, column_count=-1}
+03-09 12:37:14.694 192.168.2.254:54321   19799  #09918-75 INFO: POST /4/sessions, parms: {}
+03-09 12:37:14.703 192.168.2.254:54321   19799  #09918-76 INFO: POST /99/Rapids, parms: {ast=(setTimeZone "Etc/UTC"), session_id=_sid_93b5}
+03-09 12:37:14.815 192.168.2.254:54321   19799  #09918-77 INFO: POST /99/Rapids, parms: {ast=(tmp= py_2_sid_93b5 (h2o.runif (:= Key_Frame__upload_bf96427e09002083d7b70bceae3646b9.hex (as.factor (cols_py Key_Frame__upload_bf96427e09002083d7b70bceae3646b9.hex 'target')) 0 []) -1)), session_id=_sid_93b5}
+03-09 12:37:15.212 192.168.2.254:54321   19799  #09918-78 INFO: POST /99/Rapids, parms: {ast=(assign 'py_1_sid_93b5_splitter' py_2_sid_93b5), session_id=_sid_93b5}
+03-09 12:37:15.215 192.168.2.254:54321   19799  #09918-71 INFO: POST /99/Rapids, parms: {ast=(rm py_2_sid_93b5), session_id=_sid_93b5}
+03-09 12:37:15.241 192.168.2.254:54321   19799  #09918-73 INFO: POST /99/Rapids, parms: {ast=(tmp= py_3_sid_93b5 (rows (:= Key_Frame__upload_bf96427e09002083d7b70bceae3646b9.hex (as.factor (cols_py Key_Frame__upload_bf96427e09002083d7b70bceae3646b9.hex 'target')) 0 []) (<= py_1_sid_93b5_splitter 0.8))), session_id=_sid_93b5}
+03-09 12:37:15.690 192.168.2.254:54321   19799  #09918-74 INFO: POST /3/ModelBuilders/pca, parms: {compute_metrics=True, transform=NONE, impute_missing=True, k=10, use_all_factor_levels=False, ignore_const_cols=True, training_frame=py_3_sid_93b5, ignored_columns=["target"], pca_impl=mtj_evd_symmmatrix, pca_method=Power}
+03-09 12:37:15.841 192.168.2.254:54321   19799  FJ-1-1    INFO: Building H2O PCA model with these parameters:
+03-09 12:37:15.871 192.168.2.254:54321   19799  FJ-1-1    INFO: {"_train":{"name":"py_3_sid_93b5","type":"Key"},"_valid":null,"_nfolds":0,"_keep_cross_validation_models":true,"_keep_cross_validation_predictions":false,"_keep_cross_validation_fold_assignment":false,"_parallelize_cross_validation":true,"_auto_rebalance":true,"_seed":-1,"_fold_assignment":"AUTO","_categorical_encoding":"AUTO","_max_categorical_levels":10,"_distribution":"AUTO","_tweedie_power":1.5,"_quantile_alpha":0.5,"_huber_alpha":0.9,"_ignored_columns":["target"],"_ignore_const_cols":true,"_weights_column":null,"_offset_column":null,"_fold_column":null,"_check_constant_response":true,"_is_cv_model":false,"_score_each_iteration":false,"_max_runtime_secs":0.0,"_stopping_rounds":0,"_stopping_metric":"AUTO","_stopping_tolerance":0.001,"_response_column":null,"_balance_classes":false,"_max_after_balance_size":5.0,"_class_sampling_factors":null,"_max_confusion_matrix_size":20,"_checkpoint":null,"_pretrained_autoencoder":null,"_custom_metric_func":null,"_export_checkpoints_dir":null,"_transform":"NONE","_pca_method":"Power","_pca_implementation":"MTJ_EVD_SYMMMATRIX","_k":10,"_max_iterations":1000,"_use_all_factor_levels":false,"_compute_metrics":true,"_impute_missing":true}
+03-09 12:37:15.874 192.168.2.254:54321   19799  FJ-1-1    INFO: Dropping ignored columns: [target]
+03-09 12:37:15.874 192.168.2.254:54321   19799  FJ-1-1    INFO: train dataset already contains 83 (non-empty)  chunks. No need to rebalance. [desiredChunks=4, rebalanceRatio=1.0]
+03-09 12:37:15.909 192.168.2.254:54321   19799  FJ-1-1    INFO: Building H2O SVD model with these parameters:
+03-09 12:37:15.925 192.168.2.254:54321   19799  FJ-1-1    INFO: {"_train":{"name":"py_3_sid_93b5","type":"Key"},"_valid":null,"_nfolds":0,"_keep_cross_validation_models":true,"_keep_cross_validation_predictions":false,"_keep_cross_validation_fold_assignment":false,"_parallelize_cross_validation":true,"_auto_rebalance":true,"_seed":5375353679975532908,"_fold_assignment":"AUTO","_categorical_encoding":"AUTO","_max_categorical_levels":10,"_distribution":"AUTO","_tweedie_power":1.5,"_quantile_alpha":0.5,"_huber_alpha":0.9,"_ignored_columns":["target"],"_ignore_const_cols":true,"_weights_column":null,"_offset_column":null,"_fold_column":null,"_check_constant_response":true,"_is_cv_model":false,"_score_each_iteration":false,"_max_runtime_secs":0.0,"_stopping_rounds":0,"_stopping_metric":"AUTO","_stopping_tolerance":0.001,"_response_column":null,"_balance_classes":false,"_max_after_balance_size":5.0,"_class_sampling_factors":null,"_max_confusion_matrix_size":20,"_checkpoint":null,"_pretrained_autoencoder":null,"_custom_metric_func":null,"_export_checkpoints_dir":null,"_transform":"NONE","_svd_method":"Power","_nv":10,"_max_iterations":1000,"_u_name":null,"_v_name":null,"_keep_u":false,"_save_v_frame":false,"_only_v":false,"_use_all_factor_levels":false,"_impute_missing":true}
+03-09 12:37:15.925 192.168.2.254:54321   19799  FJ-1-1    INFO: Dropping ignored columns: [target]
+03-09 12:37:15.925 192.168.2.254:54321   19799  FJ-1-1    INFO: train dataset already contains 83 (non-empty)  chunks. No need to rebalance. [desiredChunks=4, rebalanceRatio=1.0]
+03-09 12:37:20.183 192.168.2.254:54321   19799  #09918-75 INFO: GET /3/Models/PCA_model_python_1552152967202_1, parms: {}
+03-09 12:37:20.304 192.168.2.254:54321   19799  #09918-76 INFO: POST /99/Rapids, parms: {ast=(tmp= py_4_sid_93b5 (:= Key_Frame__upload_9c85017ba1c70709d60df7a55944fe5.hex (as.factor (cols_py Key_Frame__upload_9c85017ba1c70709d60df7a55944fe5.hex 'target')) 0 [])), session_id=_sid_93b5}
+03-09 12:37:20.342 192.168.2.254:54321   19799  #09918-77 INFO: POST /4/Predictions/models/PCA_model_python_1552152967202_1/frames/py_4_sid_93b5, parms: {}
+03-09 12:37:20.790 192.168.2.254:54321   19799  #09918-74 INFO: GET /3/Frames/predictions_ba9b_PCA_model_python_1552152967202_1_on_py_4_sid_93b5, parms: {column_offset=0, full_column_count=-1, row_count=10, row_offset=0, column_count=-1}
+03-09 12:37:20.848 192.168.2.254:54321   19799  #09918-75 INFO: GET /, parms: {}
+03-09 12:37:20.850 192.168.2.254:54321   19799  #09918-75 INFO: GET /flow/index.html, parms: {}
+03-09 12:37:20.850 192.168.2.254:54321   19799  #09918-75 INFO: Trying to load resource /flow/index.html via classloader sun.misc.Launcher$AppClassLoader@50134894
+03-09 12:37:20.851 192.168.2.254:54321   19799  #09918-75 INFO: Trying to load resource /flow/index.html via classloader org.apache.spark.util.MutableURLClassLoader@3f30a78c
+03-09 12:37:20.857 192.168.2.254:54321   19799  #09918-76 INFO: POST /3/Shutdown, parms: {}
+03-09 12:37:20.867 192.168.2.254:54321   19799  #09918-77 INFO: DELETE /4/sessions/_sid_93b5, parms: {}
+03-09 12:37:22.862 192.168.2.254:54321   19799  Thread-39 INFO: Orderly shutdown:  Shutting down now.
+03-09 12:37:22.905 192.168.2.254:54321   19799  Thread-40 INFO: Orderly shutdown:  Shutting down now.

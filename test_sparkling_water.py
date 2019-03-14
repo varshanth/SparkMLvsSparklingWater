@@ -4,6 +4,7 @@
 from pysparkling import *
 from ds_argparse import parse_ds_args
 from load_susy_into_df import susy_csv_to_df
+from utils import log_with_time
 
 
 def _get_logistic_regression_model(predictor_col, response_col, train_f, val_f):
@@ -17,12 +18,13 @@ def _get_logistic_regression_model(predictor_col, response_col, train_f, val_f):
 def _test_logistic_regression_model(logistic_regression_model, test_f):
     logistic_regression_model.model_performance(test_f)
     predict_table = logistic_regression_model.predict(test_f)
+    log_with_time('---- Prediction Done: Manual Evaluation Start---')
     predictions = predict_table.as_data_frame()["predict"].tolist()
     ground_truth = test_f.as_data_frame()["target"].tolist()
     num_hits = 0
     for gt, pred in zip(ground_truth, predictions):
         num_hits += (gt==pred)
-    print('GLM (Binomial) Accuracy = {0}'.format(1.* num_hits /len(ground_truth)))
+    log_with_time('GLM (Binomial) Accuracy = {0}'.format(1.* num_hits /len(ground_truth)))
     return None
 
 
@@ -41,12 +43,13 @@ def _get_gbm_model(predictor_col, response_col, train_f, val_f):
 def _test_gbm_model(gbm_model, test_f):
     gbm_model.model_performance(test_f)
     predict_table_gbm = gbm_model.predict(test_f)
+    log_with_time('---- Prediction Done: Manual Evaluation Start---')
     predictions = predict_table_gbm.as_data_frame()["predict"].tolist()
     ground_truth = test_f.as_data_frame()["target"].tolist()
     num_hits = 0
     for gt, pred in zip(ground_truth, predictions):
         num_hits += (gt==pred)
-    print('GBM Accuracy = {0}'.format(1.* num_hits/len(ground_truth)))
+    log_with_time('GBM Accuracy = {0}'.format(1.* num_hits/len(ground_truth)))
     return None
 
 
@@ -65,7 +68,7 @@ def _test_kmeans_model(kmeans_model, test_f):
     num_hits = 0
     for gt, pred in zip(ground_truth, predictions):
         num_hits += (gt==pred)
-    print('KMeans Accuracy = {0}'.format(1.* num_hits/len(ground_truth)))
+    log_with_time('KMeans Accuracy = {0}'.format(1.* num_hits/len(ground_truth)))
     return None
 
 
@@ -79,7 +82,7 @@ def _get_pca_model(predictor_col, response_col, train_f, val_f):
 
 def _test_pca_model(pca_model, test_f):
     predictions = pca_model.predict(test_f)
-    print(predictions.ncols)
+    log_with_time(predictions.ncols)
     return None
 
 
@@ -100,20 +103,21 @@ if __name__ == '__main__':
     args = parse_ds_args(list(_dataset_load_map.keys()),
             list(_model_fn_call_map.keys()), num_train_chunks=10, num_test_chunks=10)
 
-    print('----Loading Dataset----')
+    log_with_time('----Loading Dataset----')
+
     ds_train_pd_df, ds_test_pd_df, target_col_name, target_col_idx, feature_col_names = _dataset_load_map[args.dataset](
             args.path_to_csv, args.chunksize, args.num_train_chunks, args.num_test_chunks)
     col_names = [target_col_name]+feature_col_names
 
-    print("----Creating Spark Context----")
+    log_with_time("----Creating Spark Context----")
     from pyspark import SparkContext
     sc = SparkContext("local", f"PySpark_{args.dataset}_{args.model_type}")
     sc.setLogLevel("ERROR")
 
-    print('----Creating H2O Context----')
+    log_with_time('----Creating H2O Context----')
     hc = H2OContext.getOrCreate(sc)
 
-    print('----Creating H2O Frame----')
+    log_with_time('----Creating H2O Frame----')
     import h2o
     ds_f = h2o.H2OFrame(ds_train_pd_df, column_names=col_names)
     ds_test_f = h2o.H2OFrame(ds_test_pd_df, column_names=col_names)
@@ -121,7 +125,7 @@ if __name__ == '__main__':
 
     h2o.cluster().timezone = "Etc/UTC"
 
-    print('----Assembling Data----')
+    log_with_time('----Assembling Data----')
     ds_f[target_col_name] = ds_f[target_col_name].asfactor()
     ds_f_splits = ds_f.split_frame(ratios=[0.8])
     ds_train_f, ds_val_f = ds_f_splits
@@ -129,11 +133,11 @@ if __name__ == '__main__':
     response_column = target_col_name
 
 
-    print('----Training Model----')
+    log_with_time('----Training Model----')
     model = _model_fn_call_map[args.model_type]['train'](predictor_columns,
             response_column, ds_train_f, ds_val_f)
 
-    print('----Testing Model----')
+    log_with_time('----Testing Model----')
     ret_val = _model_fn_call_map[args.model_type]['test'](model, ds_test_f)
 
-    print('----End----')
+    log_with_time('----End----')
