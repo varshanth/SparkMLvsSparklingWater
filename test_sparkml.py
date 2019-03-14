@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
 from ds_argparse import parse_ds_args
-from load_susy_into_df import susy_csv_to_df
+from load_data_into_df import csv_to_df
 from utils import log_with_time
 
 
@@ -60,14 +59,8 @@ def _get_pca_model(feat_train):
 
 def _test_pca_model(pca_model, feat_test):
     pca_model.transform(feat_test).collect()[0].pca_features
-    log_with_time('Explained Variance: '+f"{pca_model.explainedVariance}")
+    log_with_time('Explained Variance: ' + f"{pca_model.explainedVariance}")
     return None
-
-
-_dataset_load_map = {
-        'susy' : susy_csv_to_df
-        }
-
 
 _model_fn_call_map = {
         'kmeans': {'train': _get_kmeans_model, 'test': _test_kmeans_model},
@@ -77,13 +70,12 @@ _model_fn_call_map = {
 
 
 if __name__ == '__main__':
-    args = parse_ds_args(list(_dataset_load_map.keys()),
-            list(_model_fn_call_map.keys()), num_train_chunks=5, num_test_chunks=3)
+    args = parse_ds_args( list(_model_fn_call_map.keys()) )
 
     log_with_time('----Loading Dataset----')
-    ds_train_pd_df, ds_test_pd_df, target_col_name, target_col_idx, feature_col_names = _dataset_load_map[args.dataset](
-            args.path_to_csv, args.chunksize, args.num_train_chunks, args.num_test_chunks)
-    col_names = [target_col_name]+feature_col_names
+    ds_train_pd_df, ds_test_pd_df, target_col_name, target_col_idx, feature_col_names = csv_to_df( args.path_to_csv,
+                                                                                                   args.chunksize, args.num_train_chunks, args.num_test_chunks)
+    col_names = [target_col_name] + feature_col_names
 
     # Merge Train & Test into a single DF for coding simplicity
     import pandas as pd
