@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from ds_argparse import parse_ds_args
-from load_data_into_df import csv_to_df
+from datasets.load_data_into_df import csv_to_df
 from utils import log_with_time
 
 
@@ -73,8 +73,8 @@ if __name__ == '__main__':
     args = parse_ds_args( list(_model_fn_call_map.keys()) )
 
     log_with_time('----Loading Dataset----')
-    ds_train_pd_df, ds_test_pd_df, target_col_name, target_col_idx, feature_col_names = csv_to_df( args.path_to_csv,
-                                                                                                   args.chunksize, args.num_train_chunks, args.num_test_chunks)
+    ds_train_pd_df, ds_test_pd_df, target_col_name, target_col_idx, feature_col_names = csv_to_df(args.path_to_csv,
+            args.chunksize, args.num_train_chunks, args.num_test_chunks)
     col_names = [target_col_name] + feature_col_names
 
     # Merge Train & Test into a single DF for coding simplicity

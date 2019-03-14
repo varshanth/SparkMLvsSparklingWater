@@ -3,7 +3,7 @@
 
 from pysparkling import *
 from ds_argparse import parse_ds_args
-from load_data_into_df import csv_to_df
+from datasets.load_data_into_df import csv_to_df
 from utils import log_with_time
 
 def _get_logistic_regression_model(predictor_col, response_col, train_f, val_f):
