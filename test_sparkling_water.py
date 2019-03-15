@@ -27,28 +27,26 @@ def _test_logistic_regression_model(logistic_regression_model, test_f):
     return None
 
 
-def _get_gbm_model(predictor_col, response_col, train_f, val_f):
-    from h2o.estimators.gbm import H2OGradientBoostingEstimator
-    gbm_model = H2OGradientBoostingEstimator(ntrees       = 50,
-                                             max_depth    = 3,
-                                             learn_rate   = 0.1,
-                                             distribution = "bernoulli"
-                                            )
-    gbm_model.train(x = predictor_col, y = response_col,
+def _get_mlp_model(predictor_col, response_col, train_f, val_f):
+    from h2o.estimators.deeplearning import H2ODeepLearningEstimator
+    mlp_model = H2ODeepLearningEstimator(activation = 'tanh',
+            adaptive_rate=False, nesterov_accelerated_gradient=False,
+            hidden = [10,10], seed = 123, epochs = 10)
+    mlp_model.train(x = predictor_col, y = response_col,
             training_frame = train_f, validation_frame = val_f)
-    return gbm_model
+    return mlp_model
 
 
-def _test_gbm_model(gbm_model, test_f):
-    gbm_model.model_performance(test_f)
-    predict_table_gbm = gbm_model.predict(test_f)
+def _test_mlp_model(mlp_model, test_f):
+    mlp_model.model_performance(test_f)
+    predict_table_mlp = mlp_model.predict(test_f)
     log_with_time('---- Prediction Done: Manual Evaluation Start---')
-    predictions = predict_table_gbm.as_data_frame()["predict"].tolist()
+    predictions = predict_table_mlp.as_data_frame()["predict"].tolist()
     ground_truth = test_f.as_data_frame()["target"].tolist()
     num_hits = 0
     for gt, pred in zip(ground_truth, predictions):
         num_hits += (gt==pred)
-    log_with_time('GBM Accuracy = {0}'.format(1.* num_hits/len(ground_truth)))
+    log_with_time('MLP Accuracy = {0}'.format(1.* num_hits/len(ground_truth)))
     return None
 
 
@@ -88,7 +86,7 @@ _model_fn_call_map = {
         'kmeans': {'train': _get_kmeans_model, 'test': _test_kmeans_model},
         'logistic_regression' : {'train': _get_logistic_regression_model, 'test': _test_logistic_regression_model},
         'pca' : {'train': _get_pca_model, 'test': _test_pca_model},
-        'gbm' : {'train': _get_gbm_model, 'test': _test_gbm_model}
+        'mlp' : {'train': _get_mlp_model, 'test': _test_mlp_model}
         }
 
 if __name__ == '__main__':

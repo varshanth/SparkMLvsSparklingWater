@@ -26,27 +26,48 @@ def _test_kmeans_model(kmeans_model, feat_test):
 def _get_logistic_regression_model(feat_train):
     from pyspark.ml.classification import LogisticRegression
     lrm = LogisticRegression(labelCol="label", featuresCol="features", maxIter=100).fit(feat_train)
+    trainingSummary = lrm.summary
     '''
     import matplotlib.pyplot as plt
     import numpy as np
-    trainingSummary = lrm.summary
     roc = trainingSummary.roc.toPandas()
     plt.plot(roc['FPR'],roc['TPR'])
     plt.ylabel('False Positive Rate')
     plt.xlabel('True Positive Rate')
     plt.title('ROC Curve')
     plt.show()
-    '''
     log_with_time('Training set areaUnderROC: ' + f"{trainingSummary.areaUnderROC}")
+    '''
     log_with_time('Training Accuracy ' + f"{trainingSummary.accuracy}")
     return lrm
 
 
 def _test_logistic_regression_model(logistic_regression_model, feat_test):
-    from pyspark.ml.evaluation import BinaryClassificationEvaluator
+    from pyspark.ml.evaluation import MulticlassClassificationEvaluator
     predictions = logistic_regression_model.transform(feat_test)
-    evaluator = BinaryClassificationEvaluator()
-    log_with_time('Test Area Under ROC' + f"{evaluator.evaluate(predictions)}")
+    evaluator = MulticlassClassificationEvaluator(metricName="accuracy")
+    pred_and_labels = predictions.select('prediction', 'label')
+    log_with_time(f"Test Set Accuracy: {evaluator.evaluate(pred_and_labels)}")
+    return None
+
+
+def _get_mlp_model(feat_train):
+    from pyspark.ml.classification import MultilayerPerceptronClassifier
+    num_feat = len(feat_train.first()["features"])
+    layers = [num_feat, 10, 10, 2]
+    mlp_trainer = MultilayerPerceptronClassifier(
+            maxIter=10, layers=layers, seed=123, stepSize=0.005, solver='gd',
+            featuresCol="features", labelCol="label")
+    mlp_model = mlp_trainer.fit(feat_train)
+    return mlp_model
+
+
+def _test_mlp_model(mlp_model, feat_test):
+    from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+    predictions = mlp_model.transform(feat_test)
+    evaluator = MulticlassClassificationEvaluator(metricName="accuracy")
+    pred_and_labels = predictions.select('prediction', 'label')
+    log_with_time(f"Test Set Accuracy: {evaluator.evaluate(pred_and_labels)}")
     return None
 
 
@@ -65,7 +86,8 @@ def _test_pca_model(pca_model, feat_test):
 _model_fn_call_map = {
         'kmeans': {'train': _get_kmeans_model, 'test': _test_kmeans_model},
         'logistic_regression' : {'train': _get_logistic_regression_model, 'test': _test_logistic_regression_model},
-        'pca' : {'train': _get_pca_model, 'test': _test_pca_model}
+        'pca' : {'train': _get_pca_model, 'test': _test_pca_model},
+        'mlp' : {'train': _get_mlp_model, 'test': _test_mlp_model}
         }
 
 
