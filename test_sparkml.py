@@ -95,6 +95,9 @@ if __name__ == '__main__':
     args = parse_ds_args( list(_model_fn_call_map.keys()) )
 
     log_with_time('----Loading Dataset----')
+    print( "Algo ", args.model_type )
+    print( "Dataset ", args.dataset )
+    
     ds_train_pd_df, ds_test_pd_df, target_col_name, target_col_idx, feature_col_names = csv_to_df(args.path_to_csv,
             args.chunksize, args.num_train_chunks, args.num_test_chunks)
     col_names = [target_col_name] + feature_col_names
