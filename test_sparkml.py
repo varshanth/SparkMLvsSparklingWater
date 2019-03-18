@@ -94,6 +94,7 @@ _model_fn_call_map = {
 if __name__ == '__main__':
     args = parse_ds_args( list(_model_fn_call_map.keys()) )
 
+    log_with_time('----Pyspark Execution----')
     log_with_time(f"----Dataset: {args.dataset} Model:{args.model_type}----")
     log_with_time(f"----Chunksize: {args.chunksize} Train Chunks:{args.num_train_chunks} Test Chunks: {args.num_test_chunks}----")
 
