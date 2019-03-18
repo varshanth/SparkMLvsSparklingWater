@@ -53,7 +53,7 @@ for algo in ['lr', 'kmeans','pca', 'mlp']:
             dataset_cmd = dataset_susy_cmd
             chunksize_cmd = chunsize_susy_cmd
 
-        output_file = dataset + "_" + str(train_chunks) + "_" + str(test_chunks)
+        output_file = dataset + "_" + str(train_chunks) + "_" + str(test_chunks) + "_" + algo
         cmd = model_cmd + " " + path_to_csv_cmd + " " + dataset_cmd + " " + "--num_train_chunks=" + str(train_chunks) + " --num_test_chunks=" + str(test_chunks) +\
               " " + chunksize_cmd
 
