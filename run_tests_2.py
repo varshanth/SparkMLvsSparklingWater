@@ -26,6 +26,7 @@ model_lr_cmd = "--model_type logistic_regression"
 model_kmeans_cmd = "--model_type kmeans"
 model_pca_cmd = "--model_type pca"
 model_mlp_cmd = "--model_type mlp"
+model_all_cmd = "--model_type all"
 
 path_to_csv_cats_dogs_cmd = "--path_to_csv ~/datasets/cats_dogs.csv"
 path_to_csv_susy_cmd = "--path_to_csv ~/datasets/SUSY.csv"
@@ -61,6 +62,7 @@ for chunk in chunks:
 
     output_file = dataset + "_" + str(train_chunks) + "_" + str(test_chunks)
 
+    '''
     for algo in ['lr', 'kmeans','pca', 'mlp']:
         if algo == 'lr':
             model_cmd = model_lr_cmd
@@ -70,23 +72,23 @@ for chunk in chunks:
             model_cmd = model_pca_cmd
         elif algo == 'mlp':
             model_cmd = model_mlp_cmd
+    '''
+    cmd = model_all_cmd + " " + path_to_csv_cmd + " " + dataset_cmd + " " + "--num_train_chunks=" + str(train_chunks) + " --num_test_chunks=" + str(test_chunks) +\
+        " " + chunksize_cmd
 
-        cmd = model_cmd + " " + path_to_csv_cmd + " " + dataset_cmd + " " + "--num_train_chunks=" + str(train_chunks) + " --num_test_chunks=" + str(test_chunks) +\
-              " " + chunksize_cmd
+    pyspark_cmd = pyspark_run_cmd + " " + cmd + " >> " + output_file
+    pysparkling_cmd = pysparkling_run_cmd + " " + cmd + " >> " + output_file
 
-        pyspark_cmd = pyspark_run_cmd + " " + cmd + " >> " + output_file
-        pysparkling_cmd = pysparkling_run_cmd + " " + cmd + " >> " + output_file
+    try:
+        print( "Running cmd", pyspark_cmd )
+        subprocess.run(pyspark_cmd, shell=True, check=True, env=prod_env)
+    except:
+        print("Pyspark Failed for algo %s chunk %s", (algo, chunk))
 
-        try:
-            print( "Running cmd", pyspark_cmd )
-            subprocess.run(pyspark_cmd, shell=True, check=True, env=prod_env)
-        except:
-            print("Pyspark Failed for algo %s chunk %s", (algo, chunk))
+    time.sleep(2)
 
-        time.sleep(2)
-
-        try:
-            print( "Running cmd", pysparkling_cmd )
-            subprocess.run(pysparkling_cmd, shell=True, check=True, env=prod_env)
-        except:
-            print("Pysparkling Failed for algo %s chunk %s", (algo, chunk))
+    try:
+        print( "Running cmd", pysparkling_cmd )
+        subprocess.run(pysparkling_cmd, shell=True, check=True, env=prod_env)
+    except:
+        print("Pysparkling Failed for algo %s chunk %s", (algo, chunk))
