@@ -1,4 +1,5 @@
 import subprocess, time
+import pdb
 
 prod_env = env = {'SPARK_HOME': '/home/s6singla/spark-2.4.0-bin-hadoop2.7', 'TERM': 'xterm', 'SHELL': '/bin/bash', 'DERBY_HOME': '/usr/lib/jvm/java-8-oracle/db', 'SSH_CLIENT': '172.16.39.182 55252 22', 'CONDA_SHLVL'\
 : '1', 'CONDA_PROMPT_MODIFIER': '(base) ', 'SSH_TTY': '/dev/pts/0', 'USER': 's6singla', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=3\
@@ -46,29 +47,30 @@ chunks.append(('susy', 360, 76))
 chunks.append(('cats_dogs', 420, 72))
 chunks.append(('susy', 540, 114))
 
-for algo in ['lr', 'kmeans','pca', 'mlp']:
-    if algo == 'lr':
-        model_cmd = model_lr_cmd
-    elif algo == 'kmeans':
-        model_cmd = model_kmeans_cmd
-    elif algo == 'pca':
-        model_cmd = model_pca_cmd
-    elif algo == 'mlp':
-        model_cmd = model_mlp_cmd
+for chunk in chunks:
+    dataset, train_chunks, test_chunks = chunk
 
-    for chunk in chunks:
-        dataset, train_chunks, test_chunks = chunk
+    if dataset == 'cats_dogs':
+        path_to_csv_cmd = path_to_csv_cats_dogs_cmd
+        dataset_cmd = dataset_cats_dogs_cmd
+        chunksize_cmd = chunsize_cats_dogs_cmd
+    elif dataset == 'susy':
+        path_to_csv_cmd = path_to_csv_susy_cmd
+        dataset_cmd = dataset_susy_cmd
+        chunksize_cmd = chunsize_susy_cmd
 
-        if dataset == 'cats_dogs':
-            path_to_csv_cmd = path_to_csv_cats_dogs_cmd
-            dataset_cmd = dataset_cats_dogs_cmd
-            chunksize_cmd = chunsize_cats_dogs_cmd
-        elif dataset == 'susy':
-            path_to_csv_cmd = path_to_csv_susy_cmd
-            dataset_cmd = dataset_susy_cmd
-            chunksize_cmd = chunsize_susy_cmd
+    output_file = dataset + "_" + str(train_chunks) + "_" + str(test_chunks)
 
-        output_file = dataset + "_" + str(train_chunks) + "_" + str(test_chunks) + "_" + algo
+    for algo in ['lr', 'kmeans','pca', 'mlp']:
+        if algo == 'lr':
+            model_cmd = model_lr_cmd
+        elif algo == 'kmeans':
+            model_cmd = model_kmeans_cmd
+        elif algo == 'pca':
+            model_cmd = model_pca_cmd
+        elif algo == 'mlp':
+            model_cmd = model_mlp_cmd
+
         cmd = model_cmd + " " + path_to_csv_cmd + " " + dataset_cmd + " " + "--num_train_chunks=" + str(train_chunks) + " --num_test_chunks=" + str(test_chunks) +\
               " " + chunksize_cmd
 
