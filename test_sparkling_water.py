@@ -86,13 +86,14 @@ _model_fn_call_map = {
         'kmeans': {'train': _get_kmeans_model, 'test': _test_kmeans_model},
         'logistic_regression' : {'train': _get_logistic_regression_model, 'test': _test_logistic_regression_model},
         'pca' : {'train': _get_pca_model, 'test': _test_pca_model},
-        'mlp' : {'train': _get_mlp_model, 'test': _test_mlp_model}
+        'mlp' : {'train': _get_mlp_model, 'test': _test_mlp_model},
+        'all' : {}
         }
 
 if __name__ == '__main__':
     args = parse_ds_args( list(_model_fn_call_map.keys()) )
 
-    log_wit_time('----PySparkling Execution----')        
+    log_with_time('----PySparkling Execution----')
     log_with_time(f"----Dataset: {args.dataset} Model:{args.model_type}----")
     log_with_time(f"----Chunksize: {args.chunksize} Train Chunks:{args.num_train_chunks} Test Chunks: {args.num_test_chunks}----")
 
@@ -124,12 +125,22 @@ if __name__ == '__main__':
     predictor_columns = ds_train_f.drop(target_col_name).col_names
     response_column = target_col_name
 
+    model_type = args.model_type
+    model_type_choices = [model_type]
+    if model_type == 'all':
+        model_type_choices = list(_model_fn_call_map.keys())
+    for model_type in model_type_choices:
+        if model_type == 'all':
+            continue
+        try:
+            log_with_time(f"----Training {model_type} Model----")
+            model = _model_fn_call_map[model_type]['train'](predictor_columns,
+             response_column, ds_train_f, ds_val_f)
 
-    log_with_time('----Training Model----')
-    model = _model_fn_call_map[args.model_type]['train'](predictor_columns,
-            response_column, ds_train_f, ds_val_f)
-
-    log_with_time('----Testing Model----')
-    ret_val = _model_fn_call_map[args.model_type]['test'](model, ds_test_f)
+            log_with_time(f"----Testing {model_type} Model----")
+            ret_val = _model_fn_call_map[model_type]['test'](model, ds_test_f)
+        except:
+            log_with_time(f"---{model_type} Failed---")
+            continue
 
     log_with_time('----End----')

@@ -87,7 +87,8 @@ _model_fn_call_map = {
         'kmeans': {'train': _get_kmeans_model, 'test': _test_kmeans_model},
         'logistic_regression' : {'train': _get_logistic_regression_model, 'test': _test_logistic_regression_model},
         'pca' : {'train': _get_pca_model, 'test': _test_pca_model},
-        'mlp' : {'train': _get_mlp_model, 'test': _test_mlp_model}
+        'mlp' : {'train': _get_mlp_model, 'test': _test_mlp_model},
+        'all' : {}
         }
 
 
@@ -133,10 +134,21 @@ if __name__ == '__main__':
     features_data = features_vec.select("label", "features")
     feat_train, feat_test = features_data.randomSplit([train_frac, 1-train_frac])
 
-    log_with_time('----Training Model----')
-    model = _model_fn_call_map[args.model_type]['train'](feat_train)
+    model_type = args.model_type
+    model_type_choices = [model_type]
+    if model_type == 'all':
+        model_type_choices = list(_model_fn_call_map.keys())
+    for model_type in model_type_choices:
+        if model_type == 'all':
+            continue
+        try:
+            log_with_time(f"----Training {model_type} Model----")
+            model = _model_fn_call_map[model_type]['train'](feat_train)
 
-    log_with_time('----Testing Model----')
-    ret_val = _model_fn_call_map[args.model_type]['test'](model, feat_test)
+            log_with_time(f"----Testing {model_type} Model----")
+            ret_val = _model_fn_call_map[model_type]['test'](model, feat_test)
+        except:
+            log_with_time(f"---{model_type} Failed---")
+            continue
 
     log_with_time('----End----')
