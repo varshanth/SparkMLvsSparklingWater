@@ -19,7 +19,7 @@ S': '/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'SSH_CONNECTION': '172
 chunsize_cats_dogs_cmd = "--chunksize 100"
 chunsize_susy_cmd = "--chunksize 10000"
 
-pyspark_run_cmd = "spark-submit test_sparkml.py"
+pyspark_run_cmd = "spark-submit --conf spark.network.timeout=10000000 --driver-memory=14G --executor-memory=14G --num-executors=12 --executor-cores=12 test_sparkml.py"
 pysparkling_run_cmd = "$SPARKLING_HOME/bin/run-python-script.sh test_sparkling_water.py"
 
 model_lr_cmd = "--model_type logistic_regression"
