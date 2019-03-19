@@ -83,7 +83,7 @@ for chunk in chunks:
         print( "Running cmd", pyspark_cmd )
         subprocess.run(pyspark_cmd, shell=True, check=True, env=prod_env)
     except:
-        print("Pyspark Failed for algo %s chunk %s", (algo, chunk))
+        print("Pyspark Failed for chunk ", chunk)
 
     time.sleep(2)
 
@@ -91,4 +91,4 @@ for chunk in chunks:
         print( "Running cmd", pysparkling_cmd )
         subprocess.run(pysparkling_cmd, shell=True, check=True, env=prod_env)
     except:
-        print("Pysparkling Failed for algo %s chunk %s", (algo, chunk))
+        print("Pysparkling Failed for chunk ", chunk)
