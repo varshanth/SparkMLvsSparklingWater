@@ -34,6 +34,8 @@ path_to_csv_susy_cmd = "--path_to_csv ~/datasets/SUSY.csv"
 dataset_cats_dogs_cmd = "--dataset cats_dogs"
 dataset_susy_cmd = "--dataset susy"
 
+output_dir = "/home/s6singla/SparkMLvsSparklingWater/output_dir_2/"
+
 chunks = []
 chunks.append(('cats_dogs', 70, 12))
 chunks.append(('susy', 180, 38))
@@ -76,8 +78,9 @@ for chunk in chunks:
     cmd = model_all_cmd + " " + path_to_csv_cmd + " " + dataset_cmd + " " + "--num_train_chunks=" + str(train_chunks) + " --num_test_chunks=" + str(test_chunks) +\
         " " + chunksize_cmd
 
-    pyspark_cmd = pyspark_run_cmd + " " + cmd + " >> " + output_file
-    pysparkling_cmd = pysparkling_run_cmd + " " + cmd + " >> " + output_file
+
+    pyspark_cmd = pyspark_run_cmd + " " + cmd + " >> " + output_dir + output_file
+    pysparkling_cmd = pysparkling_run_cmd + " " + cmd + " >> " + output_dir + output_file
 
     try:
         print( "Running cmd", pyspark_cmd )
