@@ -18,6 +18,7 @@ S': '/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'SSH_CONNECTION': '172
 
 chunsize_cats_dogs_cmd = "--chunksize 100"
 chunsize_susy_cmd = "--chunksize 10000"
+chunsize_cats_dogs_small_cmd = "--chunksize 1000"
 
 pyspark_run_cmd = "spark-submit --conf spark.network.timeout=10000000 --driver-memory=14G --executor-memory=14G --num-executors=12 --executor-cores=12 test_sparkml.py"
 pysparkling_run_cmd = "$SPARKLING_HOME/bin/run-python-script.sh test_sparkling_water.py"
@@ -30,25 +31,37 @@ model_all_cmd = "--model_type all"
 
 path_to_csv_cats_dogs_cmd = "--path_to_csv ~/datasets/cats_dogs.csv"
 path_to_csv_susy_cmd = "--path_to_csv ~/datasets/SUSY.csv"
+path_to_csv_cats_dogs_small_cmd = "--path_to_csv ~/datasets/cats_dogs_small.csv"
 
 dataset_cats_dogs_cmd = "--dataset cats_dogs"
 dataset_susy_cmd = "--dataset susy"
+dataset_cats_dogs_small_cmd = "--dataset cats_dogs_small"
 
-output_dir = "/home/s6singla/SparkMLvsSparklingWater/output_dir_2/"
+output_dir = "/home/s6singla/SparkMLvsSparklingWater/output_dir_4/"
 
 chunks = []
+# 0.5G
+chunks.append(('susy', 90, 19))
+chunks.append(('cats_dogs', 35, 6))
+chunks.append(('cats_dogs_small', 18, 3))
+
+# 1G
+chunks.append(('susy', 180, 38))
 chunks.append(('cats_dogs', 70, 12))
-chunks.append(('susy', 180, 38))
+chunks.append(('cats_dogs_small', 37, 6))
+
+# 2G
+chunks.append(('susy', 360, 76))
 chunks.append(('cats_dogs', 140, 24))
-chunks.append(('susy', 360, 76))
+chunks.append(('cats_dogs_small', 74, 12))
+
+# 3G
 chunks.append(('cats_dogs', 210, 36))
-chunks.append(('susy', 540, 114))
+chunks.append(('cats_dogs_small', 111, 18))
+
 chunks.append(('cats_dogs', 280, 48))
-chunks.append(('susy', 180, 38))
 chunks.append(('cats_dogs', 350, 60))
-chunks.append(('susy', 360, 76))
 chunks.append(('cats_dogs', 420, 72))
-chunks.append(('susy', 540, 114))
 
 for chunk in chunks:
     dataset, train_chunks, test_chunks = chunk
@@ -61,6 +74,10 @@ for chunk in chunks:
         path_to_csv_cmd = path_to_csv_susy_cmd
         dataset_cmd = dataset_susy_cmd
         chunksize_cmd = chunsize_susy_cmd
+    elif dataset == 'cats_dogs_small':
+        path_to_csv_cmd = path_to_csv_cats_dogs_small_cmd
+        dataset_cmd = dataset_cats_dogs_small_cmd
+        chunksize_cmd = chunsize_cats_dogs_small_cmd
 
     output_file = dataset + "_" + str(train_chunks) + "_" + str(test_chunks)
 

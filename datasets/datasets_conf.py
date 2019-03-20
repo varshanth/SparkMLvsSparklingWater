@@ -5,5 +5,6 @@ CATS_DOGS dataset has been created from the python file 'create_cats_dogs_datase
 
 datasets_info = {
         'susy' : {'num_cols': 18, 'target_col_idx':0},
-        'cats_dogs' : {'num_cols' : 25088, 'target_col_idx':0}
-        }
+        'cats_dogs' : {'num_cols' : 25088, 'target_col_idx':0},
+        'cats_dogs_small' : {'num_cols' : 4096, 'target_col_idx':0}
+}
