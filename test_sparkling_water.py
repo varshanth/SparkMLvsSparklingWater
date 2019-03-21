@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from pysparkling import *
-from ds_argparse import parse_ds_args
+from app_argparse import parse_args
 from datasets.load_data_into_df import csv_to_df
 from utils import log_with_time
 
@@ -91,7 +91,7 @@ _model_fn_call_map = {
         }
 
 if __name__ == '__main__':
-    args = parse_ds_args( list(_model_fn_call_map.keys()) )
+    args = parse_args(list(_model_fn_call_map.keys()))
 
     log_with_time('----PySparkling Execution----')
     log_with_time(f"----Dataset: {args.dataset} Model:{args.model_type}----")
@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
     log_with_time("----Creating Spark Context----")
     from pyspark import SparkContext
-    sc = SparkContext("local", f"PySpark_{args.dataset}_{args.model_type}")
+    sc = SparkContext(args.master_url, f"PySpark_{args.dataset}_{args.model_type}")
     sc.setLogLevel("ERROR")
 
     log_with_time('----Creating H2O Context----')

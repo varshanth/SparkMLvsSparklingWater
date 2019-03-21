@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from ds_argparse import parse_ds_args
+from app_argparse import parse_args
 from datasets.load_data_into_df import csv_to_df
 from utils import log_with_time
 
@@ -93,7 +93,7 @@ _model_fn_call_map = {
 
 
 if __name__ == '__main__':
-    args = parse_ds_args( list(_model_fn_call_map.keys()) )
+    args = parse_args(list(_model_fn_call_map.keys()))
 
     log_with_time('----Pyspark Execution----')
     log_with_time(f"----Dataset: {args.dataset} Model:{args.model_type}----")
@@ -114,13 +114,14 @@ if __name__ == '__main__':
     log_with_time('----Creating Spark Context----')
     from pyspark import SparkContext
     from pyspark.sql import SQLContext
-    sc = SparkContext("local", f"PySpark_{args.dataset}_{args.model_type}")
+    sc = SparkContext(args.master_url, f"PySpark_{args.dataset}_{args.model_type}")
     sc.setLogLevel("ERROR")
     sqlCtx = SQLContext(sc)
 
 
     log_with_time('----Creating Spark DataFrame----')
     dist_rdd = sc.parallelize(ds_merged_pd_df.values.tolist())
+    del(ds_merged_pd_df)
     ds_spark_df = sqlCtx.createDataFrame(dist_rdd, schema=col_names)
 
 
