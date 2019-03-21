@@ -16,37 +16,55 @@ e', 'LANG': 'en_US.UTF-8', 'SHLVL': '1', 'HOME': '/home/s6singla', 'CONDA_PYTHON
 S': '/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'SSH_CONNECTION': '172.16.39.182 55252 129.97.173.68 22', 'CONDA_DEFAULT_ENV': 'base', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'DISPLAY': 'localhost\
 :10.0', 'SPARKLING_HOME': '/home/s6singla/sparkling-water', 'J2REDIR': '/usr/lib/jvm/java-8-oracle/jre', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', '_': '/home/s6singla/anaconda3/bin/python3'}
 
-chunsize_cats_dogs_cmd = "--chunksize 100"
+chunsize_cats_dogs_cmd = "--chunksize 10"
 chunsize_susy_cmd = "--chunksize 10000"
+chunsize_cats_dogs_small_cmd = "--chunksize 100"
 
-pyspark_run_cmd = "spark-submit test_sparkml.py"
+pyspark_run_cmd = "spark-submit --conf spark.network.timeout=10000000 --driver-memory=14G --executor-memory=14G --num-executors=12 --executor-cores=12 test_sparkml.py"
 pysparkling_run_cmd = "$SPARKLING_HOME/bin/run-python-script.sh test_sparkling_water.py"
 
 model_lr_cmd = "--model_type logistic_regression"
 model_kmeans_cmd = "--model_type kmeans"
 model_pca_cmd = "--model_type pca"
 model_mlp_cmd = "--model_type mlp"
+model_all_cmd = "--model_type all"
 
 path_to_csv_cats_dogs_cmd = "--path_to_csv ~/datasets/cats_dogs.csv"
 path_to_csv_susy_cmd = "--path_to_csv ~/datasets/SUSY.csv"
+path_to_csv_cats_dogs_small_cmd = "--path_to_csv ~/datasets/cats_dogs_small.csv"
 
 dataset_cats_dogs_cmd = "--dataset cats_dogs"
 dataset_susy_cmd = "--dataset susy"
+dataset_cats_dogs_small_cmd = "--dataset cats_dogs_small"
+
+output_dir = "/home/s6singla/SparkMLvsSparklingWater/output_dir_5/"
 
 chunks = []
-chunks.append(('cats_dogs', 70, 12))
-chunks.append(('susy', 180, 38))
-chunks.append(('cats_dogs', 140, 24))
-chunks.append(('susy', 360, 76))
-chunks.append(('cats_dogs', 210, 36))
-chunks.append(('susy', 540, 114))
-chunks.append(('cats_dogs', 280, 48))
-chunks.append(('susy', 180, 38))
-chunks.append(('cats_dogs', 350, 60))
-chunks.append(('susy', 360, 76))
-chunks.append(('cats_dogs', 420, 72))
-chunks.append(('susy', 540, 114))
+# 0.25G
+chunks.append(('susy', 45, 9))
+chunks.append(('cats_dogs', 170, 34))
+chunks.append(('cats_dogs_small', 90, 18))
 
+# 0.50G
+chunks.append(('susy', 90, 18))
+chunks.append(('cats_dogs', 340, 68))
+chunks.append(('cats_dogs_small', 180, 36))
+
+# 1G
+chunks.append(('susy', 180, 36))
+chunks.append(('cats_dogs', 680, 136))
+chunks.append(('cats_dogs_small', 360, 72))
+
+# 2G
+chunks.append(('cats_dogs', 360, 72))
+chunks.append(('cats_dogs', 1360, 272))
+chunks.append(('cats_dogs_small', 720, 144))
+
+'''
+chunks.append(('cats_dogs', 280, 48))
+chunks.append(('cats_dogs', 350, 60))
+chunks.append(('cats_dogs', 420, 72))
+'''
 for chunk in chunks:
     dataset, train_chunks, test_chunks = chunk
 
@@ -58,9 +76,14 @@ for chunk in chunks:
         path_to_csv_cmd = path_to_csv_susy_cmd
         dataset_cmd = dataset_susy_cmd
         chunksize_cmd = chunsize_susy_cmd
+    elif dataset == 'cats_dogs_small':
+        path_to_csv_cmd = path_to_csv_cats_dogs_small_cmd
+        dataset_cmd = dataset_cats_dogs_small_cmd
+        chunksize_cmd = chunsize_cats_dogs_small_cmd
 
     output_file = dataset + "_" + str(train_chunks) + "_" + str(test_chunks)
 
+    '''
     for algo in ['lr', 'kmeans','pca', 'mlp']:
         if algo == 'lr':
             model_cmd = model_lr_cmd
@@ -70,23 +93,26 @@ for chunk in chunks:
             model_cmd = model_pca_cmd
         elif algo == 'mlp':
             model_cmd = model_mlp_cmd
+    '''
+    cmd = model_all_cmd + " " + path_to_csv_cmd + " " + dataset_cmd + " " + "--num_train_chunks=" + str(train_chunks) + " --num_test_chunks=" + str(test_chunks) +\
+        " " + chunksize_cmd
 
-        cmd = model_cmd + " " + path_to_csv_cmd + " " + dataset_cmd + " " + "--num_train_chunks=" + str(train_chunks) + " --num_test_chunks=" + str(test_chunks) +\
-              " " + chunksize_cmd
 
-        pyspark_cmd = pyspark_run_cmd + " " + cmd + " >> " + output_file
-        pysparkling_cmd = pysparkling_run_cmd + " " + cmd + " >> " + output_file
+    pyspark_cmd = pyspark_run_cmd + " " + cmd + " >> " + output_dir + output_file
+    pysparkling_cmd = pysparkling_run_cmd + " " + cmd + " >> " + output_dir + output_file
 
-        try:
-            print( "Running cmd", pyspark_cmd )
-            subprocess.run(pyspark_cmd, shell=True, check=True, env=prod_env)
-        except:
-            print("Pyspark Failed for algo %s chunk %s", (algo, chunk))
+    try:
+        print( "Running cmd", pyspark_cmd )
+        subprocess.run(pyspark_cmd, shell=True, check=True, env=prod_env)
+    except:
+        print("Pyspark Failed for chunk ", chunk)
 
-        time.sleep(2)
+    time.sleep(5)
 
-        try:
-            print( "Running cmd", pysparkling_cmd )
-            subprocess.run(pysparkling_cmd, shell=True, check=True, env=prod_env)
-        except:
-            print("Pysparkling Failed for algo %s chunk %s", (algo, chunk))
+    try:
+        print( "Running cmd", pysparkling_cmd )
+        subprocess.run(pysparkling_cmd, shell=True, check=True, env=prod_env)
+    except:
+        print("Pysparkling Failed for chunk ", chunk)
+
+    time.sleep(5)
