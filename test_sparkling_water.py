@@ -4,11 +4,13 @@
 from pysparkling import *
 from app_argparse import parse_args
 from datasets.load_data_into_df import csv_to_df
-from utils import log_with_time
+from utils import logger
+
+logr = None
 
 def _get_logistic_regression_model(predictor_col, response_col, train_f, val_f):
     from h2o.estimators.glm import H2OGeneralizedLinearEstimator
-    glm_model = H2OGeneralizedLinearEstimator(family="binomial", alpha=[0.5])
+    glm_model = H2OGeneralizedLinearEstimator(family="binomial", alpha=[0.5], epochs=50)
     glm_model.train(x = predictor_col, y = response_col,
             training_frame = train_f, validation_frame = val_f)
     return glm_model
@@ -17,13 +19,13 @@ def _get_logistic_regression_model(predictor_col, response_col, train_f, val_f):
 def _test_logistic_regression_model(logistic_regression_model, test_f):
     logistic_regression_model.model_performance(test_f)
     predict_table = logistic_regression_model.predict(test_f)
-    log_with_time('---- Prediction Done: Manual Evaluation Start---')
+    logr.log_event('Manual Evaluation')
     predictions = predict_table.as_data_frame()["predict"].tolist()
     ground_truth = test_f.as_data_frame()["target"].tolist()
     num_hits = 0
     for gt, pred in zip(ground_truth, predictions):
         num_hits += (gt==pred)
-    log_with_time('GLM (Binomial) Accuracy = {0}'.format(1.* num_hits /len(ground_truth)))
+    logr.log_event('Testing Accuracy', f"{1.* num_hits/len(ground_truth)}")
     return None
 
 
@@ -40,13 +42,13 @@ def _get_mlp_model(predictor_col, response_col, train_f, val_f):
 def _test_mlp_model(mlp_model, test_f):
     mlp_model.model_performance(test_f)
     predict_table_mlp = mlp_model.predict(test_f)
-    log_with_time('---- Prediction Done: Manual Evaluation Start---')
+    logr.log_event('Manual Evaluation')
     predictions = predict_table_mlp.as_data_frame()["predict"].tolist()
     ground_truth = test_f.as_data_frame()["target"].tolist()
     num_hits = 0
     for gt, pred in zip(ground_truth, predictions):
         num_hits += (gt==pred)
-    log_with_time('MLP Accuracy = {0}'.format(1.* num_hits/len(ground_truth)))
+    logr.log_event('Testing Accuracy', f"{1.* num_hits/len(ground_truth)}")
     return None
 
 
@@ -60,12 +62,14 @@ def _get_kmeans_model(predictor_col, response_col, train_f, val_f):
 
 def _test_kmeans_model(kmeans_model, test_f):
     predict_table = kmeans_model.predict(test_f)
+    '''
     predictions = predict_table.as_data_frame()["predict"].tolist()
     ground_truth = test_f.as_data_frame()["target"].tolist()
     num_hits = 0
     for gt, pred in zip(ground_truth, predictions):
         num_hits += (gt==pred)
-    log_with_time('KMeans Accuracy = {0}'.format(1.* num_hits/len(ground_truth)))
+    logr.log_event('KMeans Accuracy = {0}'.format(1.* num_hits/len(ground_truth)))
+    '''
     return None
 
 
@@ -79,7 +83,7 @@ def _get_pca_model(predictor_col, response_col, train_f, val_f):
 
 def _test_pca_model(pca_model, test_f):
     predictions = pca_model.predict(test_f)
-    log_with_time(predictions.ncols)
+    # logr.log_event(predictions.ncols)
     return None
 
 _model_fn_call_map = {
@@ -92,17 +96,23 @@ _model_fn_call_map = {
 
 if __name__ == '__main__':
     args = parse_args(list(_model_fn_call_map.keys()))
+    logr = logger(args.json_log_file)
 
-    log_with_time('----PySparkling Execution----')
-    log_with_time(f"----Dataset: {args.dataset} Model:{args.model_type}----")
-    log_with_time(f"----Chunksize: {args.chunksize} Train Chunks:{args.num_train_chunks} Test Chunks: {args.num_test_chunks}----")
+    logr.log_event('Library', 'PySparkling Water')
+    logr.log_event('Dataset', f"{args.dataset}")
+    logr.log_event('Model', f"{args.model_type}")
+    logr.log_event('Chunksize', f"{args.chunksize}")
+    logr.log_event('Num train chunks', f"{args.num_train_chunks}")
+    logr.log_event('Num test chunks', f"{args.num_test_chunks}")
 
-    log_with_time('----Loading Dataset----')
+    logr.start_timer()
+    logr.log_event('Loading Dataset')
+
     ds_train_pd_df, ds_test_pd_df, target_col_name, target_col_idx, feature_col_names = csv_to_df(
             args.path_to_csv, args.chunksize, args.num_train_chunks, args.num_test_chunks, args.dataset)
     col_names = [target_col_name]+feature_col_names
 
-    log_with_time("----Creating Spark Context----")
+    logr.log_event("Creating Spark Context")
     from pyspark.sql import SparkSession
     spark = SparkSession.builder \
             .master(args.master_url) \
@@ -115,10 +125,10 @@ if __name__ == '__main__':
     sc = spark.sparkContext
     from pyspark.sql import SQLContext
 
-    log_with_time('----Creating H2O Context----')
+    logr.log_event('Creating H2O Context')
     hc = H2OContext.getOrCreate(sc)
 
-    log_with_time('----Creating H2O Frame----')
+    logr.log_event('Creating H2O Frame')
     import h2o
     ds_f = h2o.H2OFrame(ds_train_pd_df, column_names=col_names)
     ds_test_f = h2o.H2OFrame(ds_test_pd_df, column_names=col_names)
@@ -126,7 +136,7 @@ if __name__ == '__main__':
 
     h2o.cluster().timezone = "Etc/UTC"
 
-    log_with_time('----Assembling Data----')
+    logr.log_event('Assembling Data')
     ds_f[target_col_name] = ds_f[target_col_name].asfactor()
     ds_f_splits = ds_f.split_frame(ratios=[0.8])
     ds_train_f, ds_val_f = ds_f_splits
@@ -141,14 +151,15 @@ if __name__ == '__main__':
         if model_type == 'all':
             continue
         try:
-            log_with_time(f"----Training {model_type} Model----")
+            logr.log_event(f"Training", f"{model_type}")
             model = _model_fn_call_map[model_type]['train'](predictor_columns,
-             response_column, ds_train_f, ds_val_f)
+                    response_column, ds_train_f, ds_val_f)
 
-            log_with_time(f"----Testing {model_type} Model----")
+            logr.log_event(f"Testing",  f"{model_type}")
             ret_val = _model_fn_call_map[model_type]['test'](model, ds_test_f)
+            logr.log_event("Result", True)
         except:
-            log_with_time(f"---{model_type} Failed---")
+            logr.log_event("Result", False)
             continue
 
-    log_with_time('----End----')
+    logr.stop_timer()

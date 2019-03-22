@@ -10,6 +10,7 @@ def parse_args(model_type_choices, num_train_chunks=10, num_test_chunks=10, chun
     parser.add_argument('--num_train_chunks', type=int, default=num_train_chunks)
     parser.add_argument('--num_test_chunks', type=int, default=num_test_chunks)
     parser.add_argument('--master_url', type=str, default="local")
+    parser.add_argument('--json_log_file', type=str, default=None)
     args = parser.parse_args()
     return args
 

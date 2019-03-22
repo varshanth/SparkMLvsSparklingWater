@@ -3,8 +3,9 @@
 
 from app_argparse import parse_args
 from datasets.load_data_into_df import csv_to_df
-from utils import log_with_time
+from utils import logger
 
+logr = None
 
 def _get_kmeans_model(feat_train):
     from pyspark.ml.clustering import KMeans
@@ -16,16 +17,15 @@ def _get_kmeans_model(feat_train):
 def _test_kmeans_model(kmeans_model, feat_test):
     from pyspark.ml.evaluation import ClusteringEvaluator
     predictions = kmeans_model.transform(feat_test)
-    evaluator = ClusteringEvaluator()
-    silhouette = evaluator.evaluate(predictions)
-    log_with_time("Silhouette with squared euclidean distance = " + f"{silhouette}")
-    centers = kmeans_model.clusterCenters()
-    return centers
+    # evaluator = ClusteringEvaluator()
+    # silhouette = evaluator.evaluate(predictions)
+    # centers = kmeans_model.clusterCenters()
+    return None
 
 
 def _get_logistic_regression_model(feat_train):
     from pyspark.ml.classification import LogisticRegression
-    lrm = LogisticRegression(labelCol="label", featuresCol="features", maxIter=100).fit(feat_train)
+    lrm = LogisticRegression(labelCol="label", featuresCol="features", maxIter=50).fit(feat_train)
     trainingSummary = lrm.summary
     '''
     import matplotlib.pyplot as plt
@@ -36,18 +36,19 @@ def _get_logistic_regression_model(feat_train):
     plt.xlabel('True Positive Rate')
     plt.title('ROC Curve')
     plt.show()
-    log_with_time('Training set areaUnderROC: ' + f"{trainingSummary.areaUnderROC}")
+    logr.log_event('Training set areaUnderROC: ' + f"{trainingSummary.areaUnderROC}")
     '''
-    log_with_time('Training Accuracy ' + f"{trainingSummary.accuracy}")
+    # logr.log_event('Training Accuracy', f"{trainingSummary.accuracy}")
     return lrm
 
 
 def _test_logistic_regression_model(logistic_regression_model, feat_test):
     from pyspark.ml.evaluation import MulticlassClassificationEvaluator
     predictions = logistic_regression_model.transform(feat_test)
+    logr.log_event('Manual Evaluation')
     evaluator = MulticlassClassificationEvaluator(metricName="accuracy")
     pred_and_labels = predictions.select('prediction', 'label')
-    log_with_time(f"Test Set Accuracy: {evaluator.evaluate(pred_and_labels)}")
+    logr.log_event("Testing Accuracy", f"{evaluator.evaluate(pred_and_labels)}")
     return None
 
 
@@ -65,9 +66,10 @@ def _get_mlp_model(feat_train):
 def _test_mlp_model(mlp_model, feat_test):
     from pyspark.ml.evaluation import MulticlassClassificationEvaluator
     predictions = mlp_model.transform(feat_test)
+    logr.log_event('Manual Evaluation')
     evaluator = MulticlassClassificationEvaluator(metricName="accuracy")
     pred_and_labels = predictions.select('prediction', 'label')
-    log_with_time(f"Test Set Accuracy: {evaluator.evaluate(pred_and_labels)}")
+    logr.log_event("Testing Accuracy", f"{evaluator.evaluate(pred_and_labels)}")
     return None
 
 
@@ -79,8 +81,9 @@ def _get_pca_model(feat_train):
 
 
 def _test_pca_model(pca_model, feat_test):
-    pca_model.transform(feat_test).collect()[0].pca_features
-    log_with_time('Explained Variance: ' + f"{pca_model.explainedVariance}")
+    # pca_model.transform(feat_test).collect()[0].pca_features
+    pca_model.transform(feat_test)
+    # logr.log_event('Explained Variance', f"{pca_model.explainedVariance}")
     return None
 
 _model_fn_call_map = {
@@ -94,12 +97,17 @@ _model_fn_call_map = {
 
 if __name__ == '__main__':
     args = parse_args(list(_model_fn_call_map.keys()))
+    logr = logger(args.json_log_file)
 
-    log_with_time('----Pyspark Execution----')
-    log_with_time(f"----Dataset: {args.dataset} Model:{args.model_type}----")
-    log_with_time(f"----Chunksize: {args.chunksize} Train Chunks:{args.num_train_chunks} Test Chunks: {args.num_test_chunks}----")
+    logr.log_event('Library', 'PySparkML')
+    logr.log_event('Dataset', f"{args.dataset}")
+    logr.log_event('Model', f"{args.model_type}")
+    logr.log_event('Chunksize', f"{args.chunksize}")
+    logr.log_event('Num train chunks', f"{args.num_train_chunks}")
+    logr.log_event('Num test chunks', f"{args.num_test_chunks}")
 
-    log_with_time('----Loading Dataset----')
+    logr.start_timer()
+    logr.log_event('Loading Dataset')
 
     ds_train_pd_df, ds_test_pd_df, target_col_name, target_col_idx, feature_col_names = csv_to_df(args.path_to_csv,
             args.chunksize, args.num_train_chunks, args.num_test_chunks)
@@ -111,13 +119,13 @@ if __name__ == '__main__':
     train_frac = 1. * args.num_train_chunks/(args.num_test_chunks+args.num_train_chunks)
 
 
-    log_with_time('----Creating Spark Context----')
+    logr.log_event('Creating Spark Context')
     from pyspark.sql import SparkSession
     spark = SparkSession.builder \
             .master(args.master_url) \
             .appName( f"PySpark_{args.dataset}_{args.model_type}") \
             .config("spark.memory.offHeap.enabled", True) \
-            .config("spark.memory.offHeap.size","16g") \
+            .config("spark.memory.offHeap.size","6g") \
             .config("spark.cleaner.periodicGC.interval", "1min") \
             .getOrCreate()
     spark.sparkContext.setLogLevel("ERROR")
@@ -126,13 +134,13 @@ if __name__ == '__main__':
     sqlCtx = SQLContext(sc)
 
 
-    log_with_time('----Creating Spark DataFrame----')
+    logr.log_event('Creating Spark DataFrame')
     dist_rdd = sc.parallelize(ds_merged_pd_df.values.tolist())
     del(ds_merged_pd_df)
     ds_spark_df = sqlCtx.createDataFrame(dist_rdd, schema=col_names)
 
 
-    log_with_time('----Assembling Data----')
+    logr.log_event('Assembling Data')
     from pyspark.ml.feature import VectorAssembler
     vecassembler = VectorAssembler(
             inputCols=ds_spark_df.columns[:target_col_idx]+ds_spark_df.columns[target_col_idx+1:],
@@ -150,13 +158,14 @@ if __name__ == '__main__':
         if model_type == 'all':
             continue
         try:
-            log_with_time(f"----Training {model_type} Model----")
+            logr.log_event(f"Training", f"{model_type}")
             model = _model_fn_call_map[model_type]['train'](feat_train)
 
-            log_with_time(f"----Testing {model_type} Model----")
+            logr.log_event(f"Testing",  f"{model_type}")
             ret_val = _model_fn_call_map[model_type]['test'](model, feat_test)
+            logr.log_event("Result", True)
         except:
-            log_with_time(f"---{model_type} Failed---")
+            logr.log_event("Result", False)
             continue
 
-    log_with_time('----End----')
+    logr.stop_timer()
