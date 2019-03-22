@@ -112,10 +112,17 @@ if __name__ == '__main__':
 
 
     log_with_time('----Creating Spark Context----')
-    from pyspark import SparkContext
+    from pyspark.sql import SparkSession
+    spark = SparkSession.builder \
+            .master(args.master_url) \
+            .appName( f"PySpark_{args.dataset}_{args.model_type}") \
+            .config("spark.memory.offHeap.enabled", True) \
+            .config("spark.memory.offHeap.size","16g") \
+            .config("spark.cleaner.periodicGC.interval", "1min") \
+            .getOrCreate()
+    spark.sparkContext.setLogLevel("ERROR")
+    sc = spark.sparkContext
     from pyspark.sql import SQLContext
-    sc = SparkContext(args.master_url, f"PySpark_{args.dataset}_{args.model_type}")
-    sc.setLogLevel("ERROR")
     sqlCtx = SQLContext(sc)
 
 
