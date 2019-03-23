@@ -101,6 +101,7 @@ def plot_comparison_graph(spark_ml_exec_times, sparkling_water_exec_times):
     sparkling_water_events = set(list(sparkling_water_exec_times['setup'].keys()))
     union_events = spark_ml_events.union(sparkling_water_events)
     intersect_events = spark_ml_events.intersection(sparkling_water_events)
+    # Display common events on the bottom
     unique_events = list(intersect_events)+list(union_events-intersect_events)
     previous_results = [0,0]
     for unique_event in unique_events:
@@ -166,8 +167,6 @@ if __name__ == '__main__':
         print('Model types covered are not the same')
         exit()
 
-    model_types = sparkling_water_model_types # Choose any one
-    num_model_types = len(spark_ml_model_types)
     spark_ml_exec_times, sparkling_water_exec_times = \
             get_spark_ml_sparkling_water_exec_times(spark_ml_events,
                     sparkling_water_events)
