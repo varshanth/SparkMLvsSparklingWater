@@ -10,7 +10,8 @@ logr = None
 
 def _get_logistic_regression_model(predictor_col, response_col, train_f, val_f):
     from h2o.estimators.glm import H2OGeneralizedLinearEstimator
-    glm_model = H2OGeneralizedLinearEstimator(family="binomial", alpha=[0.5], epochs=50)
+    glm_model = H2OGeneralizedLinearEstimator(family="binomial", alpha=[0.5],
+            max_iterations = 50)
     glm_model.train(x = predictor_col, y = response_col,
             training_frame = train_f, validation_frame = val_f)
     return glm_model
@@ -75,7 +76,8 @@ def _test_kmeans_model(kmeans_model, test_f):
 
 def _get_pca_model(predictor_col, response_col, train_f, val_f):
     from h2o.transforms.decomposition import H2OPCA
-    pca_decomp = H2OPCA(k=10, transform="NONE", pca_method="Power", impute_missing=True)
+    pca_decomp = H2OPCA(k=10, transform="NONE", pca_method="Power",
+            impute_missing=True)
     pca_decomp.train(x=predictor_columns, training_frame=train_f)
     pca_decomp.summary()
     return pca_decomp
@@ -88,7 +90,10 @@ def _test_pca_model(pca_model, test_f):
 
 _model_fn_call_map = {
         'kmeans': {'train': _get_kmeans_model, 'test': _test_kmeans_model},
-        'logistic_regression' : {'train': _get_logistic_regression_model, 'test': _test_logistic_regression_model},
+        'logistic_regression' : {
+            'train': _get_logistic_regression_model,
+            'test': _test_logistic_regression_model
+            },
         'pca' : {'train': _get_pca_model, 'test': _test_pca_model},
         'mlp' : {'train': _get_mlp_model, 'test': _test_mlp_model},
         'all' : {}
@@ -158,7 +163,8 @@ if __name__ == '__main__':
             logr.log_event(f"Testing",  f"{model_type}")
             ret_val = _model_fn_call_map[model_type]['test'](model, ds_test_f)
             logr.log_event("Result", True)
-        except:
+        except Exception as e:
+            print(f"Error Has occured: {e}")
             logr.log_event("Result", False)
             continue
 
