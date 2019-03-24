@@ -5,8 +5,10 @@ from pysparkling import *
 from app_argparse import parse_args
 from datasets.load_data_into_df import csv_to_df
 from utils import logger, SparkConfig
+from datasets.datasets_conf import datasets_info
 
 logr = None
+num_features = -1
 
 def _get_logistic_regression_model(predictor_col, response_col, train_f, val_f):
     from h2o.estimators.glm import H2OGeneralizedLinearEstimator
@@ -77,7 +79,8 @@ def _test_kmeans_model(kmeans_model, test_f):
 
 def _get_pca_model(predictor_col, response_col, train_f, val_f):
     from h2o.transforms.decomposition import H2OPCA
-    pca_decomp = H2OPCA(k=10, transform="NONE", pca_method="Power",
+    global num_features
+    pca_decomp = H2OPCA(k = num_features//2, transform="NONE", pca_method="Power",
             impute_missing=True)
     pca_decomp.train(x=predictor_columns, training_frame=train_f)
     pca_decomp.summary()
@@ -102,6 +105,7 @@ _model_fn_call_map = {
 
 if __name__ == '__main__':
     args = parse_args(list(_model_fn_call_map.keys()))
+    num_features = datasets_info[args.dataset]['num_cols']
     logr = logger(args.json_log_file)
 
     logr.log_event('Library', 'PySparkling Water')

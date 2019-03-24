@@ -4,8 +4,10 @@
 from app_argparse import parse_args
 from datasets.load_data_into_df import csv_to_df
 from utils import logger, SparkConfig
+from datasets.datasets_conf import datasets_info
 
 logr = None
+num_features = -1
 
 def _get_kmeans_model(feat_train):
     from pyspark.ml.clustering import KMeans
@@ -54,8 +56,8 @@ def _test_logistic_regression_model(logistic_regression_model, feat_test):
 
 def _get_mlp_model(feat_train):
     from pyspark.ml.classification import MultilayerPerceptronClassifier
-    num_feat = len(feat_train.first()["features"])
-    layers = [num_feat, 10, 10, 2]
+    global num_features
+    layers = [num_features, 10, 10, 2]
     mlp_trainer = MultilayerPerceptronClassifier(
             maxIter=10, layers=layers, seed=123, stepSize=0.005, solver='gd',
             featuresCol="features", labelCol="label")
@@ -74,8 +76,9 @@ def _test_mlp_model(mlp_model, feat_test):
 
 
 def _get_pca_model(feat_train):
+    global num_features
     from pyspark.ml.feature import PCA
-    pca = PCA(k=10, inputCol="features", outputCol="pca_features")
+    pca = PCA(k = num_features//2, inputCol="features", outputCol="pca_features")
     pca_model = pca.fit(feat_train)
     return pca_model
 
@@ -97,6 +100,7 @@ _model_fn_call_map = {
 
 if __name__ == '__main__':
     args = parse_args(list(_model_fn_call_map.keys()))
+    num_features = datasets_info[args.dataset]['num_cols']
     logr = logger(args.json_log_file)
 
     logr.log_event('Library', 'PySparkML')
@@ -157,7 +161,8 @@ if __name__ == '__main__':
             logr.log_event(f"Testing",  f"{model_type}")
             ret_val = _model_fn_call_map[model_type]['test'](model, feat_test)
             logr.log_event("Result", True)
-        except:
+        except Exception as e:
+            print(f"Error Has occured: {e}")
             logr.log_event("Result", False)
             continue
 

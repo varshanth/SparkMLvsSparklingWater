@@ -1,6 +1,7 @@
 import json
 from sys import argv
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 LOADING_DS_IDX = 7
@@ -74,7 +75,7 @@ def get_spark_ml_sparkling_water_event_info(spark_ml_events, sparkling_water_eve
     spark_ml_event_info['setup'] = get_setup_event_exec_time(spark_ml_events)
 
     sparkling_water_event_info['setup'] = get_setup_event_exec_time(sparkling_water_events)
-
+    model_types = get_all_model_types(spark_ml_events)
     # Populate model information
     for model_type in model_types:
         # Spark ML
@@ -91,11 +92,10 @@ def get_spark_ml_sparkling_water_event_info(spark_ml_events, sparkling_water_eve
         idx, value = get_model_event_from_existing_range(
                 spark_ml_events,
                 model_start_idx, model_end_idx, 'Training Accuracy')
-        spark_ml_event_info[model_type]['training_accuracy'] = value
+        spark_ml_event_info[model_type]['training_accuracy'] = float(value)
         idx, value = get_model_event_from_existing_range(spark_ml_events,
                     model_start_idx, model_end_idx, 'Testing Accuracy')
-        spark_ml_event_info[model_type]['testing_accuracy'] = \
-                value
+        spark_ml_event_info[model_type]['testing_accuracy'] =  float(value)
 
         # Sparkling Water
         train_idx, train_exec_time = get_model_training_exec_time(
@@ -110,11 +110,11 @@ def get_spark_ml_sparkling_water_event_info(spark_ml_events, sparkling_water_eve
         idx, value = get_model_event_from_existing_range(
                 sparkling_water_events,
                 model_start_idx, model_end_idx, 'Training Accuracy')
-        sparkling_water_event_info[model_type]['training_accuracy'] = value
+        sparkling_water_event_info[model_type]['training_accuracy'] = float(value)
         idx, value = get_model_event_from_existing_range(sparkling_water_events,
                     model_start_idx, model_end_idx, 'Testing Accuracy')
         sparkling_water_event_info[model_type]['testing_accuracy'] = \
-                value
+                float(value)
 
     return spark_ml_event_info, sparkling_water_event_info
 
@@ -122,6 +122,7 @@ def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
     width = 0.35
     ind = (1, 2)
     xticks = ('SparkML', 'Sparkling Water')
+    acc_yticks = [round(i,1) for i in np.arange(0.0, 1.1, 0.1)]
     # Plot Setup Phase
     p_bars = []
     spark_ml_events = set(list(spark_ml_event_info['setup'].keys()))
@@ -151,15 +152,17 @@ def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
         plt.close()
         spark_ml_exec_times = spark_ml_event_info[model_type]['exec_time']
         sparkling_water_exec_times = sparkling_water_event_info[model_type]['exec_time']
-        spark_ml_accuracies = (spark_ml_event_info[model_type]['training_accuracy'], spark_ml_event_info[model_type]['testing_accuracy'])
+        spark_ml_accuracies = (spark_ml_event_info[model_type]['training_accuracy'],
+                spark_ml_event_info[model_type]['testing_accuracy'])
         sparkling_water_accuracies = (sparkling_water_event_info[model_type]['training_accuracy'],
                 sparkling_water_event_info[model_type]['testing_accuracy'])
-        temp_acc = 1
+        print(model_type, spark_ml_accuracies, sparkling_water_accuracies)
+        temp_acc = 1.0
         for i in range(2):
             temp_acc *= spark_ml_accuracies[i]
             temp_acc *= sparkling_water_accuracies[i]
 
-        num_plt_rows = 1 if temp_acc == 1 else 2
+        num_plt_rows = 1 if temp_acc == 1.0 else 2
 
         # Plot Training Times
         plt.subplot(num_plt_rows, 2, 1)
@@ -186,6 +189,7 @@ def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
             plt.ylabel('Accuracy')
             plt.title(f'Training Accuracy: {model_type}')
             plt.xticks(ind, xticks)
+            plt.yticks(acc_yticks)
             plt.tight_layout()
 
             #Plot Testing Accuracies
@@ -195,6 +199,7 @@ def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
             plt.ylabel('Accuracy')
             plt.title(f'Testing Accuracy: {model_type}')
             plt.xticks(ind, xticks)
+            plt.yticks(acc_yticks)
             plt.tight_layout()
         plt.show()
 
