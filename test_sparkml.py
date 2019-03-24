@@ -38,7 +38,7 @@ def _get_logistic_regression_model(feat_train):
     plt.show()
     logr.log_event('Training set areaUnderROC: ' + f"{trainingSummary.areaUnderROC}")
     '''
-    # logr.log_event('Training Accuracy', f"{trainingSummary.accuracy}")
+    logr.log_event('Training Accuracy', f"{trainingSummary.accuracy}")
     return lrm
 
 
@@ -123,11 +123,16 @@ if __name__ == '__main__':
     from pyspark.sql import SparkSession
     spark = SparkSession.builder \
             .master(args.master_url) \
-            .appName( f"PySpark_{args.dataset}_{args.model_type}") \
+            .appName(f"PySpark_{args.dataset}_{args.model_type}") \
+            .config("spark.rpc.message.maxSize", 1024) \
+            .config("spark.network.timeout", "1800s") \
+            .getOrCreate()
+    '''
             .config("spark.memory.offHeap.enabled", True) \
             .config("spark.memory.offHeap.size","6g") \
             .config("spark.cleaner.periodicGC.interval", "1min") \
             .getOrCreate()
+    '''
     spark.sparkContext.setLogLevel("ERROR")
     sc = spark.sparkContext
     from pyspark.sql import SQLContext

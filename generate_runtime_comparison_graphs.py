@@ -66,39 +66,65 @@ def get_model_event_from_existing_range(events, start_idx, end_idx, event_type):
             return start_idx+idx, event['value']
     return -1, -1
 
-def get_spark_ml_sparkling_water_exec_times(spark_ml_events, sparkling_water_events):
-    spark_ml_exec_times = {}
-    sparkling_water_exec_times = {}
+def get_spark_ml_sparkling_water_event_info(spark_ml_events, sparkling_water_events):
+    spark_ml_event_info = {}
+    sparkling_water_event_info = {}
 
     # Populate setup phase execution times
-    spark_ml_exec_times['setup'] = get_setup_event_exec_time(spark_ml_events)
+    spark_ml_event_info['setup'] = get_setup_event_exec_time(spark_ml_events)
 
-    sparkling_water_exec_times['setup'] = get_setup_event_exec_time(sparkling_water_events)
+    sparkling_water_event_info['setup'] = get_setup_event_exec_time(sparkling_water_events)
 
+    # Populate model information
     for model_type in model_types:
         # Spark ML
         train_idx, train_exec_time = get_model_training_exec_time(
                 spark_ml_events, model_type)
         test_idx, test_exec_time = get_model_testing_exec_time(
                 spark_ml_events, model_type)
-        spark_ml_exec_times[model_type] = (train_exec_time,
-                test_exec_time)
+
+        spark_ml_event_info[model_type] = {
+                'exec_time': (train_exec_time, test_exec_time)
+                }
+        model_start_idx, model_end_idx = get_model_start_end_idx(
+                spark_ml_events, model_type)
+        idx, value = get_model_event_from_existing_range(
+                spark_ml_events,
+                model_start_idx, model_end_idx, 'Training Accuracy')
+        spark_ml_event_info[model_type]['training_accuracy'] = value
+        idx, value = get_model_event_from_existing_range(spark_ml_events,
+                    model_start_idx, model_end_idx, 'Testing Accuracy')
+        spark_ml_event_info[model_type]['testing_accuracy'] = \
+                value
+
         # Sparkling Water
         train_idx, train_exec_time = get_model_training_exec_time(
                 sparkling_water_events, model_type)
         test_idx, test_exec_time = get_model_testing_exec_time(
                 sparkling_water_events, model_type)
-        sparkling_water_exec_times[model_type] = (train_exec_time,
-                test_exec_time)
-    return spark_ml_exec_times, sparkling_water_exec_times
+        sparkling_water_event_info[model_type] = {
+                'exec_time' : (train_exec_time, test_exec_time)
+                }
+        model_start_idx, model_end_idx = get_model_start_end_idx(
+                sparkling_water_events, model_type)
+        idx, value = get_model_event_from_existing_range(
+                sparkling_water_events,
+                model_start_idx, model_end_idx, 'Training Accuracy')
+        sparkling_water_event_info[model_type]['training_accuracy'] = value
+        idx, value = get_model_event_from_existing_range(sparkling_water_events,
+                    model_start_idx, model_end_idx, 'Testing Accuracy')
+        sparkling_water_event_info[model_type]['testing_accuracy'] = \
+                value
 
-def plot_comparison_graph(spark_ml_exec_times, sparkling_water_exec_times):
+    return spark_ml_event_info, sparkling_water_event_info
+
+def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
     width = 0.35
     ind = (1, 2)
     # Plot Setup Phase
     p_bars = []
-    spark_ml_events = set(list(spark_ml_exec_times['setup'].keys()))
-    sparkling_water_events = set(list(sparkling_water_exec_times['setup'].keys()))
+    spark_ml_events = set(list(spark_ml_event_info['setup'].keys()))
+    sparkling_water_events = set(list(sparkling_water_event_info['setup'].keys()))
     union_events = spark_ml_events.union(sparkling_water_events)
     intersect_events = spark_ml_events.intersection(sparkling_water_events)
     # Display common events on the bottom
@@ -107,9 +133,9 @@ def plot_comparison_graph(spark_ml_exec_times, sparkling_water_exec_times):
     for unique_event in unique_events:
         result = [0, 0]
         if unique_event in spark_ml_events:
-            result[0] = spark_ml_exec_times['setup'][unique_event]
+            result[0] = spark_ml_event_info['setup'][unique_event]
         if unique_event in sparkling_water_events:
-            result[1] = sparkling_water_exec_times['setup'][unique_event]
+            result[1] = sparkling_water_event_info['setup'][unique_event]
         p_bars.append(plt.bar(ind, result, width, bottom=previous_results))
         previous_results = [previous_results[0]+result[0], previous_results[1]+result[1]]
     plt.ylabel('Run Time (sec)')
@@ -119,12 +145,12 @@ def plot_comparison_graph(spark_ml_exec_times, sparkling_water_exec_times):
     plt.show()
 
     # Plot Model Specific Comparisons
-    model_types = [key for key in spark_ml_exec_times.keys() if key != 'setup']
+    model_types = [key for key in spark_ml_event_info.keys() if key != 'setup']
     for model_type in model_types:
         plt.close()
         # Plot Training Times
         plt.subplot(1, 2, 1)
-        result = (spark_ml_exec_times[model_type][0], sparkling_water_exec_times[model_type][0])
+        result = (spark_ml_event_info[model_type][0], sparkling_water_event_info[model_type][0])
         plt.bar(ind, result, width)
         plt.ylabel('Run Time (sec)')
         plt.title(f'Training Time: {model_type}')
@@ -132,7 +158,7 @@ def plot_comparison_graph(spark_ml_exec_times, sparkling_water_exec_times):
 
         #Plot Testing Times
         plt.subplot(1, 2, 2)
-        result = (spark_ml_exec_times[model_type][1], sparkling_water_exec_times[model_type][1])
+        result = (spark_ml_event_info[model_type][1], sparkling_water_event_info[model_type][1])
         plt.bar(ind, result, width)
         plt.ylabel('Run Time (sec)')
         plt.title(f'Testing Time: {model_type}')
@@ -167,8 +193,8 @@ if __name__ == '__main__':
         print('Model types covered are not the same')
         exit()
 
-    spark_ml_exec_times, sparkling_water_exec_times = \
-            get_spark_ml_sparkling_water_exec_times(spark_ml_events,
+    spark_ml_event_info, sparkling_water_event_info = \
+            get_spark_ml_sparkling_water_event_info(spark_ml_events,
                     sparkling_water_events)
 
-    plot_comparison_graph(spark_ml_exec_times, sparkling_water_exec_times)
+    plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info)

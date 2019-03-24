@@ -14,6 +14,7 @@ def _get_logistic_regression_model(predictor_col, response_col, train_f, val_f):
             max_iterations = 50)
     glm_model.train(x = predictor_col, y = response_col,
             training_frame = train_f, validation_frame = val_f)
+    logr.log_event('Training Accuracy', f"{glm_model.accuracy()[0][1]}")
     return glm_model
 
 
@@ -122,16 +123,18 @@ if __name__ == '__main__':
     spark = SparkSession.builder \
             .master(args.master_url) \
             .appName( f"PySpark_{args.dataset}_{args.model_type}") \
+            .getOrCreate()
+    '''
             .config("spark.memory.offHeap.enabled", True) \
             .config("spark.memory.offHeap.size","16g") \
             .config("spark.cleaner.periodicGC.interval", "1min") \
             .getOrCreate()
+    '''
     spark.sparkContext.setLogLevel("ERROR")
-    sc = spark.sparkContext
     from pyspark.sql import SQLContext
 
     logr.log_event('Creating H2O Context')
-    hc = H2OContext.getOrCreate(sc)
+    hc = H2OContext.getOrCreate(spark)
 
     logr.log_event('Creating H2O Frame')
     import h2o
