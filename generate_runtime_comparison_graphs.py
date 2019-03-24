@@ -2,12 +2,21 @@ import json
 from sys import argv
 import matplotlib.pyplot as plt
 import numpy as np
+import argparse
 
 
 LOADING_DS_IDX = 7
 SPARKML_SETUP_IDX = [LOADING_DS_IDX + 1 + i for i in range(3)]
 SPARKLING_WATER_SETUP_IDX = [LOADING_DS_IDX + 1 + i for i in range(4)]
 
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--sparkml_json', type=str, required=True)
+    parser.add_argument('--sparkling_water_json', type=str, required=True)
+    parser.add_argument('--output_dir', type=str, required=True)
+    args = parser.parse_args()
+    return args
 
 def get_setup_event_exec_time(events):
     lib_type = events[0]['value']
@@ -118,7 +127,10 @@ def get_spark_ml_sparkling_water_event_info(spark_ml_events, sparkling_water_eve
 
     return spark_ml_event_info, sparkling_water_event_info
 
-def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
+def plot_comparison_graph(spark_ml_event_info,
+                          sparkling_water_event_info,
+                          output_dir):
+
     width = 0.35
     ind = (1, 2)
     xticks = ('SparkML', 'Sparkling Water')
@@ -144,7 +156,7 @@ def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
     plt.title('Setup Phase Run Time Comparison')
     plt.xticks(ind, xticks)
     plt.legend((p_bar[0] for p_bar in p_bars), (unique_event for unique_event in unique_events))
-    plt.show()
+    plt.savefig(f'{output_dir}/setup_phase.png')
 
     # Plot Model Specific Comparisons
     model_types = [key for key in spark_ml_event_info.keys() if key != 'setup']
@@ -156,7 +168,6 @@ def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
                 spark_ml_event_info[model_type]['testing_accuracy'])
         sparkling_water_accuracies = (sparkling_water_event_info[model_type]['training_accuracy'],
                 sparkling_water_event_info[model_type]['testing_accuracy'])
-        print(model_type, spark_ml_accuracies, sparkling_water_accuracies)
         temp_acc = 1.0
         for i in range(2):
             temp_acc *= spark_ml_accuracies[i]
@@ -201,11 +212,13 @@ def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
             plt.xticks(ind, xticks)
             plt.yticks(acc_yticks)
             plt.tight_layout()
-        plt.show()
+        plt.savefig(f'{output_dir}/{model_type}.png')
 
 if __name__ == '__main__':
-    spark_ml_json_path = argv[1]
-    sparkling_water_json_path = argv[2]
+    args = get_args()
+    spark_ml_json_path = args.sparkml_json
+    sparkling_water_json_path = args.sparkling_water_json
+    output_dir = args.output_dir
 
     with open(spark_ml_json_path, 'r') as f:
         spark_ml_events = json.load(f)
@@ -233,4 +246,5 @@ if __name__ == '__main__':
             get_spark_ml_sparkling_water_event_info(spark_ml_events,
                     sparkling_water_events)
 
-    plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info)
+    plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info,
+            output_dir)
