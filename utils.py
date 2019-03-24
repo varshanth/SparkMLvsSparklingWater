@@ -1,6 +1,6 @@
 import time
 import json
-
+from pyspark.sql import SparkSession
 
 class logger:
     def __init__(self, output_json):
@@ -47,4 +47,30 @@ class logger:
         self.events.append(event_info)
         print(f"EXPERIMENT {event_info['start_time']} : ---- {event} = {value} ----")
 
+class SparkConfig:
+    def __init__(self, master_url, dataset, model_type):
+        self.master_url = master_url
+        self.dataset = dataset
+        self.model_type = model_type
+        self.worker_memory = "14g"
+        self.executor_memory = "14g"
+        self.rpc_message_maxSize = "1024"
+        self.network_timeout = "300s"
+        self.driver_memory = "14g"
+        self.worker_cores = "10"
+        self.executor_cores = "10"
 
+    def create_spark_session(self):
+        spark = SparkSession.builder \
+            .master(self.master_url) \
+            .appName(f"PySpark_{self.dataset}_{self.model_type}") \
+            .config("spark.worker.memory", self.worker_memory) \
+            .config("spark.executor.memory", self.executor_memory) \
+            .config("spark.rpc.message.maxSize", self.rpc_message_maxSize) \
+            .config("spark.network.timeout", self.network_timeout) \
+            .config("spark.driver.memory", self.driver_memory) \
+            .config("spark.worker.cores", self.worker_cores) \
+            .config("spark.executor.cores", self.executor_cores) \
+            .getOrCreate()
+
+        return spark

@@ -4,7 +4,7 @@
 from pysparkling import *
 from app_argparse import parse_args
 from datasets.load_data_into_df import csv_to_df
-from utils import logger
+from utils import logger, SparkConfig
 
 logr = None
 
@@ -118,25 +118,10 @@ if __name__ == '__main__':
             args.path_to_csv, args.chunksize, args.num_train_chunks, args.num_test_chunks, args.dataset)
     col_names = [target_col_name]+feature_col_names
 
-    logr.log_event("Creating Spark Context")
-    from pyspark.sql import SparkSession
-    spark = SparkSession.builder \
-            .master(args.master_url) \
-            .appName( f"PySpark_{args.dataset}_{args.model_type}") \
-            .config("spark.rpc.message.maxSize", 1024) \
-            .config("spark.network.timeout", "1800s") \
-            .config("spark.worker.memory", "14g") \
-            .config("spark.executor.memory", "14g") \
-            .config("spark.driver.memory", "14g") \
-            .config("spark.worker.cores", 10) \
-            .config("spark.executor.cores", 10) \
-            .getOrCreate()
-    '''
-            .config("spark.memory.offHeap.enabled", True) \
-            .config("spark.memory.offHeap.size","16g") \
-            .config("spark.cleaner.periodicGC.interval", "1min") \
-            .getOrCreate()
-    '''
+    logr.log_event("Creating Spark Session")
+    spark_conf = SparkConfig(args.master_url, args.dataset, args.model_type)
+    spark = spark_conf.create_spark_session()
+
     spark.sparkContext.setLogLevel("ERROR")
     from pyspark.sql import SQLContext
 

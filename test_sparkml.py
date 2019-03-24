@@ -3,7 +3,7 @@
 
 from app_argparse import parse_args
 from datasets.load_data_into_df import csv_to_df
-from utils import logger
+from utils import logger, SparkConfig
 
 logr = None
 
@@ -119,36 +119,19 @@ if __name__ == '__main__':
     train_frac = 1. * args.num_train_chunks/(args.num_test_chunks+args.num_train_chunks)
 
 
-    logr.log_event('Creating Spark Context')
-    from pyspark.sql import SparkSession
-    spark = SparkSession.builder \
-            .master(args.master_url) \
-            .appName(f"PySpark_{args.dataset}_{args.model_type}") \
-            .config("spark.rpc.message.maxSize", 1024) \
-            .config("spark.network.timeout", "1800s") \
-            .config("spark.worker.memory", "14g") \
-            .config("spark.executor.memory", "14g") \
-            .config("spark.driver.memory", "14g") \
-            .config("spark.worker.cores", 10) \
-            .config("spark.executor.cores", 10) \
-            .getOrCreate()
-    '''
-            .config("spark.memory.offHeap.enabled", True) \
-            .config("spark.memory.offHeap.size","6g") \
-            .config("spark.cleaner.periodicGC.interval", "1min") \
-            .getOrCreate()
-    '''
-    spark.sparkContext.setLogLevel("ERROR")
+    logr.log_event('Creating Spark Session')
+    spark_conf = SparkConfig(args.master_url, args.dataset, args.model_type)
+    spark = spark_conf.create_spark_session()
+
     sc = spark.sparkContext
+    spark.sparkContext.setLogLevel("ERROR")
     from pyspark.sql import SQLContext
     sqlCtx = SQLContext(sc)
-
 
     logr.log_event('Creating Spark DataFrame')
     dist_rdd = sc.parallelize(ds_merged_pd_df.values.tolist())
     del(ds_merged_pd_df)
     ds_spark_df = sqlCtx.createDataFrame(dist_rdd, schema=col_names)
-
 
     logr.log_event('Assembling Data')
     from pyspark.ml.feature import VectorAssembler
