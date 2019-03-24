@@ -126,6 +126,8 @@ if __name__ == '__main__':
             .appName(f"PySpark_{args.dataset}_{args.model_type}") \
             .config("spark.rpc.message.maxSize", 1024) \
             .config("spark.network.timeout", "1800s") \
+            .config("spark.worker.memory", "14g") \
+            .config("spark.worker.cores", 10) \
             .getOrCreate()
     '''
             .config("spark.memory.offHeap.enabled", True) \
