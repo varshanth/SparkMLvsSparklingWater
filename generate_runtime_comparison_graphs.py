@@ -121,6 +121,7 @@ def get_spark_ml_sparkling_water_event_info(spark_ml_events, sparkling_water_eve
 def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
     width = 0.35
     ind = (1, 2)
+    xticks = ('SparkML', 'Sparkling Water')
     # Plot Setup Phase
     p_bars = []
     spark_ml_events = set(list(spark_ml_event_info['setup'].keys()))
@@ -140,7 +141,7 @@ def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
         previous_results = [previous_results[0]+result[0], previous_results[1]+result[1]]
     plt.ylabel('Run Time (sec)')
     plt.title('Setup Phase Run Time Comparison')
-    plt.xticks(ind, ('SparkML', 'Sparkling Water'))
+    plt.xticks(ind, xticks)
     plt.legend((p_bar[0] for p_bar in p_bars), (unique_event for unique_event in unique_events))
     plt.show()
 
@@ -148,24 +149,54 @@ def plot_comparison_graph(spark_ml_event_info, sparkling_water_event_info):
     model_types = [key for key in spark_ml_event_info.keys() if key != 'setup']
     for model_type in model_types:
         plt.close()
+        spark_ml_exec_times = spark_ml_event_info[model_type]['exec_time']
+        sparkling_water_exec_times = sparkling_water_event_info[model_type]['exec_time']
+        spark_ml_accuracies = (spark_ml_event_info[model_type]['training_accuracy'], spark_ml_event_info[model_type]['testing_accuracy'])
+        sparkling_water_accuracies = (sparkling_water_event_info[model_type]['training_accuracy'],
+                sparkling_water_event_info[model_type]['testing_accuracy'])
+        temp_acc = 1
+        for i in range(2):
+            temp_acc *= spark_ml_accuracies[i]
+            temp_acc *= sparkling_water_accuracies[i]
+
+        num_plt_rows = 1 if temp_acc == 1 else 2
+
         # Plot Training Times
-        plt.subplot(1, 2, 1)
-        result = (spark_ml_event_info[model_type][0], sparkling_water_event_info[model_type][0])
+        plt.subplot(num_plt_rows, 2, 1)
+        result = (spark_ml_exec_times[0], sparkling_water_exec_times[0])
         plt.bar(ind, result, width)
         plt.ylabel('Run Time (sec)')
         plt.title(f'Training Time: {model_type}')
-        plt.xticks(ind, ('SparkML', 'Sparkling Water'))
+        plt.xticks(ind, xticks)
 
         #Plot Testing Times
-        plt.subplot(1, 2, 2)
-        result = (spark_ml_event_info[model_type][1], sparkling_water_event_info[model_type][1])
+        plt.subplot(num_plt_rows, 2, 2)
+        result = (spark_ml_exec_times[1], sparkling_water_exec_times[1])
         plt.bar(ind, result, width)
         plt.ylabel('Run Time (sec)')
         plt.title(f'Testing Time: {model_type}')
-        plt.xticks(ind, ('SparkML', 'Sparkling Water'))
+        plt.xticks(ind, xticks)
         plt.tight_layout()
-        plt.show()
 
+        if num_plt_rows == 2:
+            #Plot Training Accuracies
+            plt.subplot(num_plt_rows, 2, 3)
+            result = (spark_ml_accuracies[0], sparkling_water_accuracies[0])
+            plt.bar(ind, result, width)
+            plt.ylabel('Accuracy')
+            plt.title(f'Training Accuracy: {model_type}')
+            plt.xticks(ind, xticks)
+            plt.tight_layout()
+
+            #Plot Testing Accuracies
+            plt.subplot(num_plt_rows, 2, 4)
+            result = (spark_ml_accuracies[1], sparkling_water_accuracies[1])
+            plt.bar(ind, result, width)
+            plt.ylabel('Accuracy')
+            plt.title(f'Testing Accuracy: {model_type}')
+            plt.xticks(ind, xticks)
+            plt.tight_layout()
+        plt.show()
 
 if __name__ == '__main__':
     spark_ml_json_path = argv[1]
