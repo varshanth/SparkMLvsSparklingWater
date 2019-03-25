@@ -45,12 +45,12 @@ for dataset in datasets:
         train_chunks, test_chunks = chunk
 
         sub_dir = dataset + "_" + train_chunks + "_" + test_chunks + "_" + num_slaves
-        if not os._exists(output_dir):
+        if not os.path.exists(output_dir):
             os.mkdir(output_dir)
             os.chmod(output_dir, 777)
 
         abs_path_sub_dir = output_dir + sub_dir
-        if not os._exists(abs_path_sub_dir):
+        if not os.path.exists(abs_path_sub_dir):
             os.mkdir(abs_path_sub_dir)
             os.chmod(abs_path_sub_dir, 777)
 
