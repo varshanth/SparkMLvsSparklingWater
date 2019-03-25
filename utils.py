@@ -59,6 +59,8 @@ class SparkConfig:
         self.driver_memory = "14g"
         self.worker_cores = "10"
         self.executor_cores = "10"
+        self.gc_interval = "10min"
+        self.heartbeat_interval = "60s"
 
     def create_spark_session(self):
         spark = SparkSession.builder \
@@ -71,6 +73,8 @@ class SparkConfig:
             .config("spark.driver.memory", self.driver_memory) \
             .config("spark.worker.cores", self.worker_cores) \
             .config("spark.executor.cores", self.executor_cores) \
+            .config("spark.cleaner.periodicGC.interval", self.gc_interval) \
+            .config("spark.executor.heartbeatInterval", self.heartbeat_interval) \
             .getOrCreate()
 
         return spark
