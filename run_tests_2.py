@@ -80,5 +80,7 @@ for dataset in datasets:
             generate_graphs_cmd = "python3 generate_runtime_comparison_graphs.py " + " --sparkml_json " + abs_path_sparkml_json + \
                                   " --sparkling_water_json " + abs_path_sparkling_water_json + " --output_dir " + abs_path_sub_dir
             subprocess.run(generate_graphs_cmd, shell=True, check=True, env=prod_env )
+        except:
+            print("Generation of graphs failed")
 
         time.sleep(5)
