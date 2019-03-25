@@ -12,7 +12,7 @@ prod_env = {'SPARK_HOME': '/home/s6singla/spark-2.4.0-bin-hadoop2.7',
             'CONDA_PYTHON_EXE': '/home/s6singla/anaconda3/bin/python',
             'SPARKLING_HOME': '/home/s6singla/sparkling-water'}
 
-pyspark_run_cmd = "/home/s6singla/spark-2.4.0-bin-hadoop2.7/spark-submit test_sparkml.py "
+pyspark_run_cmd = "/home/s6singla/spark-2.4.0-bin-hadoop2.7/bin/spark-submit test_sparkml.py "
 pysparkling_run_cmd = "/home/s6singla/sparkling-water/bin/run-python-script.sh test_sparkling_water.py "
 
 model_all_cmd = " --model_type all "
@@ -45,9 +45,14 @@ for dataset in datasets:
         train_chunks, test_chunks = chunk
 
         sub_dir = dataset + "_" + train_chunks + "_" + test_chunks + "_" + num_slaves
+        if not os._exists(output_dir):
+            os.mkdir(output_dir)
+            os.chmod(output_dir, 777)
+
         abs_path_sub_dir = output_dir + sub_dir
-        os.mkdir(abs_path_sub_dir)
-        os.chmod(abs_path_sub_dir, 777)
+        if not os._exists(abs_path_sub_dir):
+            os.mkdir(abs_path_sub_dir)
+            os.chmod(abs_path_sub_dir, 777)
 
         abs_path_sparkml_json = abs_path_sub_dir + "/" + json_sparkml_file
         abs_path_sparkling_water_json = abs_path_sub_dir + "/" + json_sparkling_file
@@ -58,7 +63,6 @@ for dataset in datasets:
         pyspark_cmd = pyspark_run_cmd + cmd + " --json_log_file=" + abs_path_sparkml_json
         pysparkling_cmd = pysparkling_run_cmd + cmd + " --json_log_file=" + abs_path_sparkling_water_json
 
-        pdb.set_trace()
         try:
             print( "Running cmd", pyspark_cmd )
             subprocess.run(pyspark_cmd, shell=True, check=True, env=prod_env)
