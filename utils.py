@@ -78,3 +78,95 @@ class SparkConfig:
             .getOrCreate()
 
         return spark
+
+class events_summarizer:
+    def __init__(self, events):
+        LOADING_DS_IDX = 7
+        library_type_setup_idx = {
+                'PySparkML': [LOADING_DS_IDX + 1 + i for i in range(3)],
+                'PySparkling Water': [LOADING_DS_IDX + 1 + i for i in range(4)]
+                }
+
+        library_type = events[0]['value']
+        if library_type not in list(library_type_setup_idx.keys()):
+            print('Library Type Not Accepted')
+        self.library_type = library_type
+        self.setup_idx = library_type_setup_idx[self.library_type]
+        self.events = events
+        self.model_types = self._get_all_model_types()
+        self.events_summary = self._get_events_summary()
+
+    def get_setup_event_exec_time(self):
+        event_exec_times = {}
+        for idx in self.setup_idx:
+            event_exec_times[self.events[idx]['event']] = self.events[idx]['execution_time']
+        return event_exec_times
+
+    def _get_all_model_types(self):
+        model_types = []
+        for event in self.events:
+            if event['event'] == 'Training':
+                model_types.append(event['value'])
+        return model_types
+
+    def get_model_start_end_idx(self, model_type):
+        start_idx = end_idx = -1
+        for idx, event in enumerate(self.events):
+            if event['event'] == 'Training' and event['value'] == model_type:
+                # Training event matching the model type
+                start_idx = idx
+            elif start_idx != -1 and event['event'] == 'Result':
+                # Result of the event if the start idx was set already
+                end_idx = idx
+                break
+        return start_idx, end_idx
+
+    def get_model_training_exec_time(self, model_type):
+        start_idx, end_idx = self.get_model_start_end_idx(model_type)
+        if end_idx - start_idx == 1:
+            # Training Failed
+            return start_idx, -1
+        return start_idx, self.events[start_idx]['execution_time']
+
+    def get_model_testing_exec_time(self, model_type):
+        start_idx, end_idx = self.get_model_start_end_idx(model_type)
+        if end_idx - start_idx == 1:
+            # Training Failed
+            return -1, -1
+        elif not self.events[end_idx]['value']:
+            # Testing Failed
+            return -1, -1
+        # Find Testing event
+        for idx, event in enumerate(self.events[start_idx+1:end_idx]):
+            if event['event'] == 'Testing':
+                return start_idx+1+idx, event['execution_time']
+        # Testing Event Not Found even though result is True
+        return -1, -1
+
+    def get_model_event_from_existing_range(self, start_idx, end_idx, event_type):
+        for idx, event in enumerate(self.events[start_idx:end_idx]):
+            if event['event'] == event_type:
+                return start_idx+idx, event['value']
+        return -1, -1
+
+    def _get_events_summary(self):
+        # Populate setup phase execution times
+        events_summary = {'setup' : self.get_setup_event_exec_time()}
+
+        # Populate model information
+        for model_type in self.model_types:
+            train_idx, train_exec_time = self.get_model_training_exec_time(model_type)
+            test_idx, test_exec_time = self.get_model_testing_exec_time(model_type)
+
+            events_summary[model_type] = {
+                    'exec_time': (train_exec_time, test_exec_time)
+                    }
+            model_start_idx, model_end_idx = self.get_model_start_end_idx(model_type)
+            idx, value = self.get_model_event_from_existing_range(
+                    model_start_idx, model_end_idx, 'Training Accuracy')
+            events_summary[model_type]['training_accuracy'] = float(value)
+            idx, value = self.get_model_event_from_existing_range(
+                        model_start_idx, model_end_idx, 'Testing Accuracy')
+            events_summary[model_type]['testing_accuracy'] =  float(value)
+        return events_summary
+
