@@ -25,10 +25,9 @@ json_sparkling_file = "sparkling_water.json"
 master_url_cmd = "--master_url spark://129.97.173.68:7077"
 
 chunks = {'susy': [('180', '36'), ('360', '72')],
-          'cats_dogs_small': [('360', '72'), ('720', '144'), ('1080', '216'), ('1440', '288'), ('1800', '360'), ('2160', '432')],
-          'cats_dogs': [('340', '68'), ('680', '136'), ('1020', '204')]
+          'cats_dogs': [('360', '72'), ('720', '144'), ('1080', '216')],
             }
-datasets = ['susy', 'cats_dogs_small', 'cats_dogs']
+datasets = ['susy', 'cats_dogs']
 
 dataset_env = {}
 dataset_env['susy'] = {}
@@ -37,9 +36,6 @@ dataset_env['susy']['chunksize'] = '10000'
 dataset_env['cats_dogs'] = {}
 dataset_env['cats_dogs']['path'] = '/home/s6singla/datasets/cats_dogs.csv'
 dataset_env['cats_dogs']['chunksize'] = '100'
-dataset_env['cats_dogs_small'] = {}
-dataset_env['cats_dogs_small']['path'] = '/home/s6singla/datasets/cats_dogs_small.csv'
-dataset_env['cats_dogs_small']['chunksize'] = '100'
 
 for dataset in datasets:
     for chunk in chunks[dataset]:
