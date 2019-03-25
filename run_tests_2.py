@@ -10,7 +10,8 @@ num_slaves = args.num_slaves
 prod_env = {'SPARK_HOME': '/home/s6singla/spark-2.4.0-bin-hadoop2.7',
             'JAVA_HOME': '/usr/lib/jvm/java-8-oracle',
             'CONDA_PYTHON_EXE': '/home/s6singla/anaconda3/bin/python',
-            'SPARKLING_HOME': '/home/s6singla/sparkling-water'}
+            'SPARKLING_HOME': '/home/s6singla/sparkling-water',
+            'PATH': '/home/s6singla/anaconda3/bin:$PATH'}
 
 pyspark_run_cmd = "/home/s6singla/spark-2.4.0-bin-hadoop2.7/bin/spark-submit test_sparkml.py "
 pysparkling_run_cmd = "/home/s6singla/sparkling-water/bin/run-python-script.sh test_sparkling_water.py "
@@ -47,12 +48,12 @@ for dataset in datasets:
         sub_dir = dataset + "_" + train_chunks + "_" + test_chunks + "_" + num_slaves
         if not os.path.exists(output_dir):
             os.mkdir(output_dir)
-            os.chmod(output_dir, 777)
+            os.chmod(output_dir, 0o777)
 
         abs_path_sub_dir = output_dir + sub_dir
         if not os.path.exists(abs_path_sub_dir):
             os.mkdir(abs_path_sub_dir)
-            os.chmod(abs_path_sub_dir, 777)
+            os.chmod(abs_path_sub_dir, 0o777)
 
         abs_path_sparkml_json = abs_path_sub_dir + "/" + json_sparkml_file
         abs_path_sparkling_water_json = abs_path_sub_dir + "/" + json_sparkling_file
@@ -83,7 +84,7 @@ for dataset in datasets:
             print( "Generating Graphs" )
             generate_graphs_cmd = "python3 generate_runtime_comparison_graphs.py " + " --sparkml_json " + abs_path_sparkml_json + \
                                   " --sparkling_water_json " + abs_path_sparkling_water_json + " --output_dir " + abs_path_sub_dir
-            subprocess.run(generate_graphs_cmd, shell=True, check=True, env=prod_env )
+            subprocess.run(generate_graphs_cmd, shell=True, check=True, env=prod_env)
         except:
             print("Generation of graphs failed")
 
