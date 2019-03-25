@@ -31,13 +31,13 @@ datasets = ['susy', 'cats_dogs_small', 'cats_dogs']
 
 dataset_env = {}
 dataset_env['susy'] = {}
-dataset_env['susy']['path'] = 'SUSY.csv'
+dataset_env['susy']['path'] = '/home/s6singla/datasets/SUSY.csv'
 dataset_env['susy']['chunksize'] = '10000'
 dataset_env['cats_dogs'] = {}
-dataset_env['cats_dogs']['path'] = 'cats_dogs.csv'
+dataset_env['cats_dogs']['path'] = '/home/s6singla/datasets/cats_dogs.csv'
 dataset_env['cats_dogs']['chunksize'] = '100'
 dataset_env['cats_dogs_small'] = {}
-dataset_env['cats_dogs_small']['path'] = 'cats_dogs_small.csv'
+dataset_env['cats_dogs_small']['path'] = '/home/s6singla/datasets/cats_dogs_small.csv'
 dataset_env['cats_dogs_small']['chunksize'] = '100'
 
 for dataset in datasets:
