@@ -66,7 +66,7 @@ for dataset in datasets:
 
         try:
             print( "Running cmd", pyspark_cmd )
-            subprocess.run(pyspark_cmd, shell=True, check=True, env=prod_env)
+            subprocess.run(pyspark_cmd, shell=True, check=True)
         except:
             print("Pyspark Failed for chunk ", chunk)
 
@@ -74,7 +74,7 @@ for dataset in datasets:
 
         try:
             print( "Running cmd", pysparkling_cmd )
-            subprocess.run(pysparkling_cmd, shell=True, check=True, env=prod_env)
+            subprocess.run(pysparkling_cmd, shell=True, check=True)
         except:
             print("Pysparkling Failed for chunk ", chunk)
 
@@ -84,7 +84,7 @@ for dataset in datasets:
             print( "Generating Graphs" )
             generate_graphs_cmd = "python3 generate_runtime_comparison_graphs.py " + " --sparkml_json " + abs_path_sparkml_json + \
                                   " --sparkling_water_json " + abs_path_sparkling_water_json + " --output_dir " + abs_path_sub_dir
-            subprocess.run(generate_graphs_cmd, shell=True, check=True, env=prod_env)
+            subprocess.run(generate_graphs_cmd, shell=True, check=True)
         except:
             print("Generation of graphs failed")
 
