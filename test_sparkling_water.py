@@ -79,11 +79,15 @@ def _test_kmeans_model(kmeans_model, test_f):
 
 def _get_pca_model(predictor_col, response_col, train_f, val_f):
     from h2o.transforms.decomposition import H2OPCA
-    global num_features
-    pca_decomp = H2OPCA(k = num_features//2, transform="NONE", pca_method="Power",
+    # global num_features
+    # k= num_features//2
+    k = 10
+    pca_decomp = H2OPCA(k = k, transform="NONE", pca_method="Power",
             impute_missing=True)
     pca_decomp.train(x=predictor_columns, training_frame=train_f)
     pca_decomp.summary()
+    # Explained Variance
+    print(f'Training Accuracy', f'{pca_decomp.varimp()[2][k-1]}')
     return pca_decomp
 
 

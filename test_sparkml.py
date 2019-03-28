@@ -76,17 +76,20 @@ def _test_mlp_model(mlp_model, feat_test):
 
 
 def _get_pca_model(feat_train):
-    global num_features
+    # global num_features
+    # k = num_features//2
+    k = 10
     from pyspark.ml.feature import PCA
-    pca = PCA(k = num_features//2, inputCol="features", outputCol="pca_features")
+    pca = PCA(k = k, inputCol="features", outputCol="pca_features")
     pca_model = pca.fit(feat_train)
+    # Explained Variance
+    logr.log_event('Training Accuracy', f"{sum(pca_model.explainedVariance)}")
     return pca_model
 
 
 def _test_pca_model(pca_model, feat_test):
     # pca_model.transform(feat_test).collect()[0].pca_features
     pca_model.transform(feat_test)
-    # logr.log_event('Explained Variance', f"{pca_model.explainedVariance}")
     return None
 
 _model_fn_call_map = {
