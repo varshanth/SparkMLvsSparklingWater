@@ -1,6 +1,8 @@
 import subprocess, time, os
 import pdb
 import argparse
+import matplotlib
+matplotlib.use('agg')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--num_slaves', type=str, required=True)
