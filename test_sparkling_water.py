@@ -87,7 +87,7 @@ def _get_pca_model(predictor_col, response_col, train_f, val_f):
     pca_decomp.train(x=predictor_columns, training_frame=train_f)
     pca_decomp.summary()
     # Explained Variance
-    print(f'Training Accuracy', f'{pca_decomp.varimp()[2][k-1]}')
+    logr.log_event(f'Training Accuracy', f'{pca_decomp.varimp()[2][k-1]}')
     return pca_decomp
 
 
