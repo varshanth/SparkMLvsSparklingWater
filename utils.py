@@ -162,11 +162,10 @@ class events_summarizer:
                     'exec_time': (train_exec_time, test_exec_time)
                     }
             model_start_idx, model_end_idx = self.get_model_start_end_idx(model_type)
-            idx, value = self.get_model_event_from_existing_range(
+            idx, train_value = self.get_model_event_from_existing_range(
                     model_start_idx, model_end_idx, 'Training Accuracy')
-            events_summary[model_type]['training_accuracy'] = float(value)
-            idx, value = self.get_model_event_from_existing_range(
+            idx, test_value = self.get_model_event_from_existing_range(
                         model_start_idx, model_end_idx, 'Testing Accuracy')
-            events_summary[model_type]['testing_accuracy'] =  float(value)
+            events_summary[model_type]['accuracy'] =  (float(train_value), float(test_value))
         return events_summary
 

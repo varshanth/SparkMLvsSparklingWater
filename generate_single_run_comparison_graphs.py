@@ -50,10 +50,9 @@ def plot_comparison_graph(spark_ml_event_info,
         plt.close()
         spark_ml_exec_times = spark_ml_event_info[model_type]['exec_time']
         sparkling_water_exec_times = sparkling_water_event_info[model_type]['exec_time']
-        spark_ml_accuracies = (spark_ml_event_info[model_type]['training_accuracy'],
-                spark_ml_event_info[model_type]['testing_accuracy'])
-        sparkling_water_accuracies = (sparkling_water_event_info[model_type]['training_accuracy'],
-                sparkling_water_event_info[model_type]['testing_accuracy'])
+        spark_ml_accuracies = spark_ml_event_info[model_type]['accuracy']
+        sparkling_water_accuracies = sparkling_water_event_info[model_type]['accuracy']
+
         temp_acc = 1.0
         for i in range(2):
             temp_acc *= spark_ml_accuracies[i]

@@ -13,7 +13,7 @@ num_features = -1
 def _get_logistic_regression_model(predictor_col, response_col, train_f, val_f):
     from h2o.estimators.glm import H2OGeneralizedLinearEstimator
     glm_model = H2OGeneralizedLinearEstimator(family="binomial", alpha=[0.5],
-            max_iterations = 50)
+            solver = 'L_BFGS', max_iterations = 50)
     glm_model.train(x = predictor_col, y = response_col,
             training_frame = train_f, validation_frame = val_f)
     logr.log_event('Training Accuracy', f"{glm_model.accuracy()[0][1]}")
