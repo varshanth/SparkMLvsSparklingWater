@@ -26,15 +26,11 @@ json_sparkling_file = "sparkling_water.json"
 
 master_url_cmd = "--master_url spark://129.97.173.68:7077"
 
-chunks = {'susy': [('180', '36'), ('360', '72')],
-          'cats_dogs': [('360', '72'), ('720', '144'), ('1080', '216')],
-            }
-datasets = ['susy', 'cats_dogs']
+chunks = {'cats_dogs': [('360', '72'), ('720', '144'), ('1080', '216')]
+          }
+datasets = ['cats_dogs']
 
 dataset_env = {}
-dataset_env['susy'] = {}
-dataset_env['susy']['path'] = '/home/s6singla/datasets/SUSY.csv'
-dataset_env['susy']['chunksize'] = '10000'
 dataset_env['cats_dogs'] = {}
 dataset_env['cats_dogs']['path'] = '/home/s6singla/datasets/cats_dogs.csv'
 dataset_env['cats_dogs']['chunksize'] = '100'
